@@ -1,8 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
-import {View, Text, ScrollView, TouchableOpacity, FlatList} from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
 import AppColors from '../../utils/AppColors';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AppHeader from '../../components/AppHeader';
 import {
   responsiveFontSize,
@@ -16,7 +22,7 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import SVGXml from '../../components/SVGXML';
-import {AppIcons} from './../../assets/Icons/index';
+import { AppIcons } from './../../assets/Icons/index';
 import AppTextInput from '../../components/AppTextInput';
 import LoadingModal from '../../components/LoadingModal';
 import ConfirmationModal from '../../components/ConfirmationModal';
@@ -25,15 +31,18 @@ import { Color } from '../../utils/Colors';
 import StyleButton from '../../components/StyleButton';
 
 const timesData = [
-  {id: 1, time: 'Credit/ Debit Card'},
-  {id: 2, time: 'Apple Pay', iconName: 'apple-pay'},
-  {id: 3, time: 'Google Pay'},
+  { id: 1, time: 'Credit/ Debit Card' },
+  { id: 2, time: 'Apple Pay', iconName: 'apple-pay' },
+  { id: 3, time: 'Google Pay' },
 ];
 
 const SelectPaymentMethod = () => {
   const navigation = useNavigation();
-  const [isSelectedCard, setIsSelectedCard] = useState({id: 0});
-  const [visibleConfirmationModal, setVisibleConfirmationModal] = useState({id: 0});
+  const [isSelectedCard, setIsSelectedCard] = useState({ id: 0 });
+  const [isCardAdded, setIsCardAdded] = useState(false);
+  const [visibleConfirmationModal, setVisibleConfirmationModal] = useState({
+    id: 0,
+  });
 
   return (
     <Background>
@@ -45,22 +54,24 @@ const SelectPaymentMethod = () => {
       <View
         style={{
           marginVertical: responsiveHeight(2),
-        }}>
+        }}
+      >
         <FlatList
           data={timesData}
           ItemSeparatorComponent={<LineBreak space={2} />}
-          renderItem={({item, index}) => {
+          renderItem={({ item, index }) => {
             return (
               <View
                 style={{
-                  backgroundColor: Color("lightTheme"),
+                  backgroundColor: Color('lightTheme'),
                   borderRadius: 10,
                   paddingHorizontal: responsiveWidth(4),
                   paddingVertical: responsiveHeight(2),
                   borderWidth: 1,
                   borderColor: Color('gold'),
                   gap: 10,
-                }}>
+                }}
+              >
                 <View
                   style={{
                     flexDirection: 'row',
@@ -68,14 +79,16 @@ const SelectPaymentMethod = () => {
                     justifyContent: 'space-between',
                     gap: 10,
                     alignItems: 'center',
-                  }}>
+                  }}
+                >
                   <TouchableOpacity
                     style={{
                       flexDirection: 'row',
                       gap: 10,
                       alignItems: 'center',
                     }}
-                    onPress={() => setIsSelectedCard({id: item.id})}>
+                    onPress={() => setIsSelectedCard({ id: item.id })}
+                  >
                     <Fontisto
                       name={
                         isSelectedCard.id === item.id
@@ -107,7 +120,8 @@ const SelectPaymentMethod = () => {
                           backgroundColor: AppColors.WHITE,
                           paddingHorizontal: 7,
                           borderRadius: 5,
-                        }}>
+                        }}
+                      >
                         <SVGXml
                           width={'27'}
                           height={'27'}
@@ -128,19 +142,22 @@ const SelectPaymentMethod = () => {
                         justifyContent: 'space-between',
                         gap: 10,
                         alignItems: 'center',
-                      }}>
+                      }}
+                    >
                       <View
                         style={{
                           flexDirection: 'row',
                           gap: 10,
                           alignItems: 'center',
-                        }}>
+                        }}
+                      >
                         <View
                           style={{
                             paddingHorizontal: 7,
                             backgroundColor: AppColors.WHITE,
                             borderRadius: 5,
-                          }}>
+                          }}
+                        >
                           <SVGXml
                             width={'27'}
                             height={'27'}
@@ -173,13 +190,15 @@ const SelectPaymentMethod = () => {
                         justifyContent: 'space-between',
                         gap: 10,
                         alignItems: 'center',
-                      }}>
+                      }}
+                    >
                       <View
                         style={{
                           flexDirection: 'row',
                           gap: 10,
                           alignItems: 'center',
-                        }}>
+                        }}
+                      >
                         <View
                           style={{
                             borderWidth: 1,
@@ -187,7 +206,8 @@ const SelectPaymentMethod = () => {
                             backgroundColor: AppColors.BLUE,
                             paddingHorizontal: 7,
                             borderRadius: 5,
-                          }}>
+                          }}
+                        >
                           <SVGXml
                             width={'27'}
                             height={'27'}
@@ -208,79 +228,93 @@ const SelectPaymentMethod = () => {
                     </TouchableOpacity>
 
                     <LineBreak space={2} />
-                    <TouchableOpacity
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <AppText
-                        title="Add New Card"
-                        textSize={2}
-                        textColor={Color('gold')}
-                        textFontWeight
-                      />
-                      <AntDesign
-                        name={'close'}
-                        size={responsiveFontSize(2.5)}
-                        color={Color('gold')}
-                      />
-                    </TouchableOpacity>
+                    {isCardAdded && (
+                      <>
+                        <TouchableOpacity
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                          }}
+                          onPress={() => setIsCardAdded(false)}
+                        >
+                          <AppText
+                            title="Add New Card"
+                            textSize={2}
+                            textColor={Color('gold')}
+                            textFontWeight
+                          />
+                          <AntDesign
+                            name={'close'}
+                            size={responsiveFontSize(2.5)}
+                            color={Color('gold')}
+                          />
+                        </TouchableOpacity>
 
-                    <LineBreak space={2} />
+                        <LineBreak space={2} />
+                      </>
+                    )}
 
-                    <TouchableOpacity style={{flexDirection: 'row', gap: 5}}>
-                      <Entypo
-                        name={'plus'}
-                        size={responsiveFontSize(2.5)}
-                        color={Color('gold')}
-                      />
-                      <AppText
-                        title="Add Card"
-                        textSize={1.8}
-                        textColor={Color('gold')}
-                        textFontWeight
-                      />
-                    </TouchableOpacity>
+                    {!isCardAdded && (
+                      <TouchableOpacity
+                        style={{ flexDirection: 'row', gap: 5 }}
+                        onPress={() => setIsCardAdded(true)}
+                      >
+                        <Entypo
+                          name={'plus'}
+                          size={responsiveFontSize(2.5)}
+                          color={Color('gold')}
+                        />
+                        <AppText
+                          title="Add Card"
+                          textSize={1.8}
+                          textColor={Color('gold')}
+                          textFontWeight
+                        />
+                      </TouchableOpacity>
+                    )}
 
-                    <LineBreak space={2} />
-                    <AppTextInput
-                      containerBg={'#464182'}
-                      paddingHorizontal={5}
-                      borderRadius={11}
-                      borderWidth={1}
-                      borderColor={Color('gold')}
-                      inputPlaceHolder={'Card Number'}
-                    />
-                    <LineBreak space={1.5} />
-                    <View style={{flexDirection: 'row', gap: 10}}>
-                      <AppTextInput
-                        containerBg={'#464182'}
-                        paddingHorizontal={5}
-                        borderRadius={11}
-                        borderWidth={1}
-                        borderColor={Color('gold')}
-                        inputPlaceHolder={'MM/YY'}
-                        inputWidth={20}
-                      />
-                      <AppTextInput
-                        containerBg={'#464182'}
-                        paddingHorizontal={5}
-                        borderRadius={11}
-                        borderWidth={1}
-                        borderColor={Color('gold')}
-                        inputPlaceHolder={'CVC'}
-                        inputWidth={20}
-                      />
-                    </View>
-                    <LineBreak space={1.5} />
-                    <AppTextInput
-                      containerBg={'#464182'}
-                      paddingHorizontal={5}
-                      borderRadius={11}
-                      borderWidth={1}
-                      borderColor={Color('gold')}
-                      inputPlaceHolder={'Card Holder Name'}
-                    />
+                    {isCardAdded && (
+                      <>
+                        <AppTextInput
+                          containerBg={'#464182'}
+                          paddingHorizontal={5}
+                          borderRadius={11}
+                          borderWidth={1}
+                          borderColor={Color('gold')}
+                          inputPlaceHolder={'Card Number'}
+                        />
+                        <LineBreak space={1.5} />
+                        <View style={{ flexDirection: 'row', gap: 10 }}>
+                          <AppTextInput
+                            containerBg={'#464182'}
+                            paddingHorizontal={5}
+                            borderRadius={11}
+                            borderWidth={1}
+                            borderColor={Color('gold')}
+                            inputPlaceHolder={'MM/YY'}
+                            inputWidth={20}
+                          />
+                          <AppTextInput
+                            containerBg={'#464182'}
+                            paddingHorizontal={5}
+                            borderRadius={11}
+                            borderWidth={1}
+                            borderColor={Color('gold')}
+                            inputPlaceHolder={'CVC'}
+                            inputWidth={20}
+                          />
+                        </View>
+                        <LineBreak space={1.5} />
+                        <AppTextInput
+                          containerBg={'#464182'}
+                          paddingHorizontal={5}
+                          borderRadius={11}
+                          borderWidth={1}
+                          borderColor={Color('gold')}
+                          inputPlaceHolder={'Card Holder Name'}
+                        />
+                      </>
+                    )}
                   </View>
                 )}
               </View>
@@ -300,10 +334,10 @@ const SelectPaymentMethod = () => {
           visible={visibleConfirmationModal}
           setVisible={() => {
             navigation.navigate('DownloadReceipt');
-            setVisibleConfirmationModal(false)
+            setVisibleConfirmationModal(false);
           }}
           buttonTwoHandlePress={() => {
-            setVisibleConfirmationModal(false)
+            setVisibleConfirmationModal(false);
           }}
         />
 
@@ -322,9 +356,7 @@ const SelectPaymentMethod = () => {
         <LineBreak space={4} />
 
         <View>
-          <StyleButton
-            onPress={() => setVisibleConfirmationModal(true)}
-          >
+          <StyleButton onPress={() => setVisibleConfirmationModal(true)}>
             Pay Now
           </StyleButton>
         </View>

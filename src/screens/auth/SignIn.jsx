@@ -104,6 +104,30 @@ const SignIn = ({ navigation }) => {
               onChange={userPassword => setPassword(userPassword)}
             />
           )}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <AppText
+                title="SignIn with phone"
+                textSize={1.7}
+                textColor={AppColors.WHITE}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => navigation.navigate('SigninWithEmailAndPassword')}>
+              <AppText
+                title="SignIn with email & password"
+                textSize={1.7}
+                textColor={AppColors.WHITE}
+              />
+            </TouchableOpacity>
+          </View>
+
           <LineBreak space={screenType === 'signup_with_email' ? 2 : 11} />
           <Button
             style={{ width: width * 0.9, alignSelf: 'center' }}

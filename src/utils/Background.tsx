@@ -1,38 +1,24 @@
 import React from 'react';
-import { Dimensions, FlatList, Image, Keyboard, Platform, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
-import Drawer from '../../../src/components/Drawer.tsx';
-import KeyboardView from '../utils/KeyboardView';
+import { Dimensions, Image, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Color } from './Colors.tsx';
+import { responsiveWidth } from './Responsive_Dimensions.js';
 
 const { width, height } = Dimensions.get('screen');
 
 interface Props {
     children: any
 }
-const Background = ({children}: Props) => {
+const Background = ({ children }: Props) => {
     return (
-        <>
-            {/* <Drawer /> */}
-            <TouchableWithoutFeedback onPress={() => {
-                Keyboard.dismiss();
-            }}>
-                <SafeAreaView style={styles.safeAreaView}>
-                    <Image source={require('../assets/background.png')} style={styles.backgroundImage} />
-                    <View style={styles.content}>
-                        <KeyboardView>
-                            <FlatList
-                                showsVerticalScrollIndicator={false}
-                                showsHorizontalScrollIndicator={false}
-                                data={[children]}
-                                renderItem={({ item }) => item}
-                                keyExtractor={(item, index: any) => index}
-                            />
-                        </KeyboardView>
-                    </View>
-                </SafeAreaView>
-            </TouchableWithoutFeedback>
-        </>
+        <SafeAreaView style={styles.safeAreaView}>
+            <Image source={require('../assets/background.png')} style={styles.backgroundImage} />
+            <View style={styles.content}>
+                <ScrollView style={styles.safeAreaView} showsVerticalScrollIndicator={false}>
+                    {children}
+                </ScrollView>
+            </View>
+        </SafeAreaView>
     )
 }
 
@@ -51,8 +37,8 @@ const styles = StyleSheet.create({
         backgroundColor: Color('otpInputBackground')
     },
     content: {
-        width: width * 0.9,
+        flex: 1,
         alignSelf: 'center',
-        flex: 1
+        width: width * 0.9,
     }
-})
+});

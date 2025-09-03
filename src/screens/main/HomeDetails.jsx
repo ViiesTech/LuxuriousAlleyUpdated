@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { View, Image, FlatList, TouchableOpacity } from 'react-native';
+import { View, Image, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import AppHeader from '../../components/AppHeader';
 import AppColors from '../../utils/AppColors';
 import { useNavigation } from '@react-navigation/native';

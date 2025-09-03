@@ -25,10 +25,11 @@ import Background from '../../utils/Background';
 import LineBreak from '../../components/LineBreak';
 import { Color } from '../../utils/Colors';
 
-const Otp = () => {
+const Otp = ({ route }) => {
   const [value, setValue] = useState();
   const ref = useBlurOnFulfill({ value, cellCount: 4 });
   const navigation = useNavigation();
+  const type = route?.params?.type;
 
   return (
     <Background>
@@ -36,14 +37,18 @@ const Otp = () => {
       <View style={{ flex: 1 }}>
         <View style={{ gap: 10 }}>
           <AppText
-            title="Verify Your Identity"
+            title={type ? 'Email Verification' : 'Verify Your Identity'}
             textSize={3}
             textColor={AppColors.WHITE}
             textAlignment={'center'}
             textFontWeight
           />
           <AppText
-            title="We’ve sent a 4-digit code to 071*****05 Please enter it below."
+            title={
+              type
+                ? 'Please type OTP code that we give you'
+                : 'We’ve sent a 4-digit code to 071*****05 Please enter it below.'
+            }
             textSize={1.9}
             textwidth={80}
             textAlignment={'center'}
@@ -65,7 +70,10 @@ const Otp = () => {
           })}
           testID="my-code-input"
           renderCell={({ index, symbol, isFocused }) => (
-            <Text key={index} style={[styles.cell, isFocused && styles.focusCell]}>
+            <Text
+              key={index}
+              style={[styles.cell, isFocused && styles.focusCell]}
+            >
               {symbol || (isFocused ? <Cursor /> : null)}
             </Text>
           )}
@@ -98,8 +106,16 @@ const Otp = () => {
       </View>
       <LineBreak space={50} />
       <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-        <StyleButton onPress={() => navigation.navigate('Main')}>
-          Continue
+        <StyleButton
+          onPress={() => {
+            if (type) {
+              navigation.navigate('NewPassword');
+            } else {
+              navigation.navigate('Main');
+            }
+          }}
+        >
+          {type ? 'Verify Email' : 'Continue'}
         </StyleButton>
       </View>
     </Background>

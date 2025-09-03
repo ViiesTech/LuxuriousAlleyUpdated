@@ -100,8 +100,8 @@ const AllReviews = () => {
 
       <View>
         <StyleButton
-          onPress={() => navigation.navigate('StylistSelect')}
-        >{`Continue`}</StyleButton>
+          onPress={() => {}}
+        >{`Add Review`}</StyleButton>
       </View>
     </Background>
   );
