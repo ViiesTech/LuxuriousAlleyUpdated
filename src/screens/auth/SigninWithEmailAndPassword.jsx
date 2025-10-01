@@ -73,7 +73,9 @@ const SigninWithEmailAndPassword = () => {
       <LineBreak space={2} />
 
       <View>
-        <StyleButton onPress={() => navigation.navigate('Main')}>
+        <StyleButton
+          onPress={() => navigation.navigate('Main', { screen: 'SetLocation' })}
+        >
           Login
         </StyleButton>
       </View>

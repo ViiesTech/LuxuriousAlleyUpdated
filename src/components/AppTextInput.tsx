@@ -1,6 +1,6 @@
 import { View, Text, TextInput } from 'react-native'
 import React from 'react'
-import { responsiveFontSize, responsiveWidth } from '../utils/Responsive_Dimensions'
+import { responsiveFontSize, responsiveHeight, responsiveWidth } from '../utils/Responsive_Dimensions'
 import AppColors from '../utils/AppColors'
 type props = {
   logo?: any,
@@ -12,9 +12,12 @@ type props = {
   borderColor?: any
   paddingHorizontal?: any;
 borderRadius?:any
-placeholderTextColor?:any
+placeholderTextColor?:any;
+inputHeight?:any;
+multiline?:any;
+textAlignVertical?:any;
 }
-const AppTextInput = ({ logo, inputBgColour, placeholderTextColor, inputPlaceHolder, borderWidth, borderColor, inputWidth = 80, containerBg, paddingHorizontal, borderRadius }: props) => {
+const AppTextInput = ({ logo, inputBgColour, textAlignVertical, inputHeight, multiline, placeholderTextColor, inputPlaceHolder, borderWidth, borderColor, inputWidth = 80, containerBg, paddingHorizontal, borderRadius }: props) => {
   return (
     <View style={{
       flexDirection: 'row',
@@ -26,8 +29,9 @@ const AppTextInput = ({ logo, inputBgColour, placeholderTextColor, inputPlaceHol
 
       <TextInput
         placeholder={inputPlaceHolder}
+        multiline={multiline}
         placeholderTextColor={placeholderTextColor ? placeholderTextColor : AppColors.WHITE}
-        style={{ width: responsiveWidth(inputWidth), color: placeholderTextColor ? placeholderTextColor : AppColors.WHITE }}
+        style={{ width: responsiveWidth(inputWidth), textAlignVertical: textAlignVertical, height: responsiveHeight(inputHeight), color: placeholderTextColor ? placeholderTextColor : AppColors.WHITE }}
 
       />
     </View>

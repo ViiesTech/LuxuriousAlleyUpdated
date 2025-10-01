@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import AppColors from '../../utils/AppColors'
-import { responsiveFontSize, responsiveWidth } from '../../utils/Responsive_Dimensions'
+import { responsiveFontSize, responsiveHeight, responsiveWidth } from '../../utils/Responsive_Dimensions'
 
 type textProps = {
     title?: any
@@ -13,15 +13,17 @@ type textProps = {
     borderBottomWidth?:any,
     borderBottomColor?:any,
     paddingBottom?:any,
+    lineHeight?:any,
 }
 
-const AppText = ({title, textSize, textColor, textFontWeight,textAlignment,textwidth, borderBottomWidth, borderBottomColor, paddingBottom} : textProps) => {
+const AppText = ({title, textSize, lineHeight, textColor, textFontWeight,textAlignment,textwidth, borderBottomWidth, borderBottomColor, paddingBottom} : textProps) => {
   return (
       <Text style={
         {width: textwidth ? responsiveWidth(textwidth) : null ,
            fontSize: textSize ? responsiveFontSize(textSize) : responsiveFontSize(1.4),
             fontWeight: textFontWeight ? "bold" : "regular",
              color: textColor ? textColor :  AppColors.BLACK,
+             lineHeight: responsiveHeight(lineHeight),
             textAlign: textAlignment ?  textAlignment : null,
              alignSelf:textAlignment ?textAlignment: null,
              borderBottomWidth: borderBottomWidth ? borderBottomWidth : 0,

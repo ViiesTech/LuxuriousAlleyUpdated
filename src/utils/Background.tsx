@@ -2,7 +2,6 @@ import React from 'react';
 import { Dimensions, Image, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Color } from './Colors.tsx';
-import { responsiveWidth } from './Responsive_Dimensions.js';
 
 const { width, height } = Dimensions.get('screen');
 

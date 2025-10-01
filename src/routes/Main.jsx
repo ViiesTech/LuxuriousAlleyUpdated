@@ -27,6 +27,10 @@ import EditProfile from '../screens/main/profile/EditProfile';
 import { Color } from '../utils/Colors';
 import AppColors from '../utils/AppColors';
 import ChooseServices from './../screens/main/ChooseServices';
+import SetLocation from './../screens/main/SetLocation';
+import UseCurrentLocation from './../screens/main/UseCurrentLocation';
+import RateYourExperience from './../screens/main/RateYourExperience';
+import ProductDetails from './../screens/main/ProductDetails';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -35,20 +39,24 @@ const Main = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={MyTabs} />
-      <Tab.Screen name="HomeDetails" component={HomeDetails} />
-      <Tab.Screen name="AllReviews" component={AllReviews} />
-      <Tab.Screen name="StylistSelect" component={StylistSelect} />
-      <Tab.Screen
+      <Stack.Screen name="HomeDetails" component={HomeDetails} />
+      <Stack.Screen name="AllReviews" component={AllReviews} />
+      <Stack.Screen name="StylistSelect" component={StylistSelect} />
+      <Stack.Screen
         name="DateAndTimeSelection"
         component={DateAndTimeSelection}
       />
-      <Tab.Screen name="BookingSummary" component={BookingSummary} />
-      <Tab.Screen name="SelectPaymentMethod" component={SelectPaymentMethod} />
-      <Tab.Screen name="DownloadReceipt" component={DownloadReceipt} />
-      <Tab.Screen name="SearchLocation" component={SearchLocation} />
-      <Tab.Screen name="ChooseServices" component={ChooseServices} />
-      <Tab.Screen name="EditProfile" component={EditProfile} />
-      <Tab.Screen name="MapView" component={MapView} />
+      <Stack.Screen name="BookingSummary" component={BookingSummary} />
+      <Stack.Screen name="SelectPaymentMethod" component={SelectPaymentMethod} />
+      <Stack.Screen name="DownloadReceipt" component={DownloadReceipt} />
+      <Stack.Screen name="SearchLocation" component={SearchLocation} />
+      <Stack.Screen name="ChooseServices" component={ChooseServices} />
+      <Stack.Screen name="RateYourExperience" component={RateYourExperience} />
+      <Stack.Screen name="SetLocation" component={SetLocation} />
+      <Stack.Screen name="UseCurrentLocation" component={UseCurrentLocation} />
+      <Stack.Screen name="EditProfile" component={EditProfile} />
+      <Stack.Screen name="ProductDetails" component={ProductDetails} />
+      <Stack.Screen name="MapView" component={MapView} />
       <Stack.Screen name="Profile" component={MyTabs} />
     </Stack.Navigator>
   );
@@ -71,7 +79,7 @@ function MyTabs() {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
-          } else if (route.name === 'Booking') {
+          } else if (route.name === 'Shop & Book') {
             iconName = focused ? 'calendar' : 'calendar-outline';
           } else if (route.name === 'Favourites') {
             iconName = focused ? 'heart' : 'heart-outline';
@@ -110,7 +118,7 @@ function MyTabs() {
       })}
     >
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Booking" component={Booking} />
+      <Tab.Screen name="Shop & Book" component={Booking} />
       <Tab.Screen name="Favourites" component={Favourites} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>

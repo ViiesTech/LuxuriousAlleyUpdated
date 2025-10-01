@@ -4,7 +4,7 @@ export default SaloonsArray = [
   {
     id: 1,
     img: APPImages.NAILS,
-    title: 'Nails',
+    title: 'Saloon name',
     location: 'Lakewood, California ',
     KM: 2,
     Rating: 4.5,

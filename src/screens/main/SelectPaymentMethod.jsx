@@ -63,7 +63,7 @@ const SelectPaymentMethod = () => {
             return (
               <View
                 style={{
-                  backgroundColor: Color('lightTheme'),
+                  backgroundColor: item.id == 1 ? Color('lightTheme') : isSelectedCard.id === item.id ? Color('gold') : Color('lightTheme'),
                   borderRadius: 10,
                   paddingHorizontal: responsiveWidth(4),
                   paddingVertical: responsiveHeight(2),
@@ -96,7 +96,7 @@ const SelectPaymentMethod = () => {
                           : 'radio-btn-passive'
                       }
                       size={responsiveFontSize(2.5)}
-                      color={Color('gold')}
+                      color={isSelectedCard.id === item.id ? AppColors.WHITE : Color('gold')}
                     />
                     <AppText
                       title={item.time}

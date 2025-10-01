@@ -1,4 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
+import React, { useState } from 'react';
 import {
   View,
   Image,
@@ -6,7 +7,6 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import React, { useState } from 'react';
 import AppText from '../../components/AppTextComps/AppText';
 import AppColors from '../../utils/AppColors';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -16,20 +16,61 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from '../../utils/Responsive_Dimensions';
-import BackgroundScreen from '../../components/AppTextComps/BackgroundScreen';
 import AppTextInput from '../../components/AppTextInput';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import APPImages from '../../assets/APPImages';
 import LinearGradient from 'react-native-linear-gradient';
-import AppButton from '../../components/AppButton';
 import Entypo from 'react-native-vector-icons/Entypo';
 import SaloonsCard from '../../components/SaloonsCard';
 import SaloonsArray from '../../utils/SaloonsArray';
 import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Color } from '../../utils/Colors';
 import Background from '../../utils/Background';
 import LineBreak from '../../components/LineBreak';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import ProductCard from '../../components/ProductCard';
+
+const popularStylist = [
+  {
+    id: 1,
+    image: APPImages.user,
+    name: 'Jefferson Harris',
+    rating: '2.6',
+  },
+  {
+    id: 2,
+    image: APPImages.user,
+    name: 'Ricardo Trautman',
+    rating: '2.6',
+  },
+  {
+    id: 3,
+    image: APPImages.user,
+    name: 'Robert Collier',
+    rating: '2.6',
+  },
+  {
+    id: 4,
+    image: APPImages.user,
+    name: 'Robert Collier',
+    rating: '2.6',
+  },
+  {
+    id: 5,
+    image: APPImages.user,
+    name: 'Ricardo Trautman',
+    rating: '2.6',
+  },
+];
+
+const product = [
+  { id: 1, image: APPImages.product, name: 'Deep Mask', price: '$50.00' },
+  { id: 2, image: APPImages.product, name: 'Deep Mask', price: '$50.00' },
+  { id: 3, image: APPImages.product, name: 'Deep Mask', price: '$50.00' },
+  { id: 4, image: APPImages.product, name: 'Deep Mask', price: '$50.00' },
+  { id: 5, image: APPImages.product, name: 'Deep Mask', price: '$50.00' },
+];
 
 const Home = () => {
   const [serviceSelected, setServiceSelect] = useState(0);
@@ -169,11 +210,11 @@ const Home = () => {
         </View>
       </ImageBackground>
 
-      <View style={{ marginTop: responsiveHeight(2)}}>
+      <View style={{ marginTop: responsiveHeight(2) }}>
         <AppText
           title="Services"
           textColor={AppColors.WHITE}
-          textSize={3}
+          textSize={2.5}
           textFontWeight
         />
 
@@ -194,13 +235,9 @@ const Home = () => {
                     flexDirection: 'row',
                     alignItems: 'center',
                     padding: 10,
-                    backgroundColor: logic
-                      ? Color('gold')
-                      : Color('cardColor'),
-                      borderWidth: 1,
-                      borderColor: logic
-                      ? Color('gold')
-                      : AppColors.WHITE,
+                    backgroundColor: logic ? Color('gold') : Color('cardColor'),
+                    borderWidth: 1,
+                    borderColor: logic ? Color('gold') : AppColors.WHITE,
                     borderRadius: 10,
                     gap: 5,
                   }}
@@ -232,7 +269,7 @@ const Home = () => {
         <AppText
           title="Nearby Salons"
           textColor={AppColors.WHITE}
-          textSize={3}
+          textSize={2.5}
           textFontWeight
         />
 
@@ -251,8 +288,8 @@ const Home = () => {
           </TouchableOpacity>
         </View>
       </View>
-      
-        <LineBreak space={2} />
+
+      <LineBreak space={2} />
 
       <FlatList
         data={SaloonsArray}
@@ -270,6 +307,108 @@ const Home = () => {
           );
         }}
       />
+
+      <LineBreak space={1} />
+
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginTop: responsiveHeight(3),
+        }}
+      >
+        <AppText
+          title="Popular Stylist"
+          textColor={AppColors.WHITE}
+          textSize={2.5}
+          textFontWeight
+        />
+
+        <TouchableOpacity onPress={() => navigation.navigate('MapView')}>
+          <AppText title="See All" textColor={Color('gold')} textSize={2} />
+        </TouchableOpacity>
+      </View>
+
+      <LineBreak space={2} />
+
+      <FlatList
+        data={popularStylist}
+        horizontal
+        contentContainerStyle={{ gap: responsiveWidth(5) }}
+        showsHorizontalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <TouchableOpacity style={{ alignItems: 'center' }}>
+            <Image source={item.image} style={{ width: 80, height: 80 }} />
+            <LineBreak space={0.5} />
+            <AppText
+              title={item.name}
+              textColor={AppColors.DARKGRAY}
+              textSize={1.8}
+              textwidth={20}
+              textAlignment={'center'}
+            />
+            <LineBreak space={0.5} />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: responsiveWidth(2),
+              }}
+            >
+              <FontAwesome
+                name={'star'}
+                size={responsiveFontSize(1.8)}
+                color={Color('gold')}
+              />
+              <AppText
+                title={item.rating}
+                textColor={AppColors.DARKGRAY}
+                textSize={1.8}
+              />
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+
+      <LineBreak space={1} />
+
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginTop: responsiveHeight(3),
+        }}
+      >
+        <AppText
+          title="Products"
+          textColor={AppColors.WHITE}
+          textSize={2.5}
+          textFontWeight
+        />
+
+        <TouchableOpacity onPress={() => navigation.navigate('MapView')}>
+          <AppText title="See All" textColor={Color('gold')} textSize={2} />
+        </TouchableOpacity>
+      </View>
+
+      <LineBreak space={2} />
+
+      <FlatList
+        data={product}
+        horizontal
+        contentContainerStyle={{ gap: responsiveWidth(5) }}
+        showsHorizontalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <ProductCard
+            item={item}
+            onCardPress={() => navigation.navigate('ProductDetails')}
+          />
+        )}
+      />
+
+      <LineBreak space={3} />
     </Background>
   );
 };

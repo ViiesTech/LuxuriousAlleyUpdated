@@ -15,8 +15,12 @@ interface Props {
     background?: any,
     btnWidth?: any,
     btnHeight?: any,
-    justifyContent?:any,
-    alignItems?:any,
+    justifyContent?: any,
+    alignItems?: any,
+    color?: any,
+    leftIcon?: any,
+    rightIcon?: any,
+    fontWeight?: any,
 }
 
 const Loading = ({ color }: { color?: any }) => {
@@ -25,7 +29,7 @@ const Loading = ({ color }: { color?: any }) => {
 
 const { width, height } = Dimensions.get('window');
 
-const StyleButton = ({ loading, children, style, fontSize, onPress, justifyContent, alignItems, resizeMode, background, btnWidth, btnHeight }: Props) => {
+const StyleButton = ({ loading, children, color, fontWeight, style, leftIcon, rightIcon, fontSize, onPress, justifyContent, alignItems, resizeMode, background, btnWidth, btnHeight }: Props) => {
     const bg = background || require('../assets/button-bg.png');
 
     return (
@@ -36,13 +40,17 @@ const StyleButton = ({ loading, children, style, fontSize, onPress, justifyConte
                         ?
                         <Loading />
                         :
-                        <Text style={{
-                            fontSize: responsiveFontSize(fontSize || 2.2),
-                            color: AppColors.textColor,
-                            fontFamily: 'Poppins-ExtraBold',
-                            fontWeight: 'bold',
-                            paddingVertical: btnHeight || btnWidth ? null : height * 0.015
-                        }}>{children}</Text>
+                        <View style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
+                            {leftIcon}
+                            <Text style={{
+                                fontSize: responsiveFontSize(fontSize || 2.2),
+                                color: color ? color : AppColors.textColor,
+                                fontFamily: 'Poppins-ExtraBold',
+                                fontWeight: fontWeight ? fontWeight : 'bold',
+                                paddingVertical: btnHeight || btnWidth ? null : height * 0.015
+                            }}>{children}</Text>
+                            {rightIcon}
+                        </View>
                 }
             </ImageBackground>
         </TouchableOpacity>

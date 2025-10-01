@@ -83,7 +83,28 @@ const king = `<svg width="44" height="28" viewBox="0 0 44 28" fill="none" xmlns=
 <stop offset="1" stop-color="#FF9800"/>
 </linearGradient>
 </defs>
-</svg>`
+</svg>`;
+
+const location = `<svg width="52" height="64" viewBox="0 0 52 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M26 0C40.3591 0 52 11.6773 52 26.0811C51.9999 43.2326 35.0953 51.4435 32.9775 53.3545C30.8148 55.3082 29.0275 59.6801 28.3066 62.1602C27.9568 63.3622 26.9762 63.9715 26 64C25.0262 63.9739 24.0432 63.3645 23.6934 62.1602C22.9725 59.6801 21.1852 55.3058 19.0225 53.3545C16.9047 51.4435 0.000144124 43.2326 0 26.0811C0 11.6773 11.6409 0 26 0ZM26 18.9678C22.0835 18.9678 18.9092 22.1523 18.9092 26.0811C18.9093 30.0097 22.0835 33.1934 26 33.1934C29.9165 33.1934 33.0907 30.0097 33.0908 26.0811C33.0908 22.1523 29.9165 18.9678 26 18.9678Z" fill="url(#paint0_linear_8_6049)"/>
+<defs>
+<linearGradient id="paint0_linear_8_6049" x1="-0.00381151" y1="31.9999" x2="51.9998" y2="31.9999" gradientUnits="userSpaceOnUse">
+<stop stop-color="#D0AA5D"/>
+<stop offset="0.31" stop-color="#826A36"/>
+<stop offset="0.35" stop-color="#876E38"/>
+<stop offset="0.4" stop-color="#977A3F"/>
+<stop offset="0.46" stop-color="#B08F4A"/>
+<stop offset="0.53" stop-color="#D4AB59"/>
+<stop offset="0.59" stop-color="#FFCD6C"/>
+<stop offset="0.82" stop-color="#806B42"/>
+<stop offset="1" stop-color="#876825"/>
+</linearGradient>
+</defs>
+</svg>`;
+
+const marker_red = `<svg width="26" height="32" viewBox="0 0 26 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M13 0C20.1794 0 25.9998 5.83835 26 13.04C26 21.6159 17.5472 25.7213 16.4883 26.6768C15.4069 27.6536 14.5138 29.8401 14.1533 31.0801C13.9784 31.6811 13.4881 31.9858 13 32C12.5131 31.987 12.0216 31.6823 11.8467 31.0801C11.4862 29.8401 10.5931 27.6524 9.51172 26.6768C8.45281 25.7213 0 21.6159 0 13.04C0.000203992 5.83835 5.82058 0 13 0ZM13 9.48438C11.0419 9.48438 9.45431 11.0759 9.4541 13.04C9.4541 15.0044 11.0417 16.5967 13 16.5967C14.9583 16.5967 16.5459 15.0044 16.5459 13.04C16.5457 11.0759 14.9581 9.48438 13 9.48438Z" fill="#FF1010"/>
+</svg>`;
 
 export const AppIcons = {
     Google_Pay: Google_Pay,
@@ -91,4 +112,6 @@ export const AppIcons = {
     master_card:master_card,
     app_logo:app_logo,
     king: king,
+    location: location,
+    marker_red: marker_red,
 }

@@ -11,4 +11,8 @@ export default APPImages = {
     counting: require('./OBJECTS.png'),
     app_logo: require('./app_logo.png'),
     bg: require('./background.png'),
+    map_full: require('./full_map.png'),
+    marker_bg: require('./marker_bg.png'),
+    user: require('./user.png'),
+    product: require('./productTwo.webp'),
 }

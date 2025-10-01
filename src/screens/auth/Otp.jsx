@@ -111,7 +111,7 @@ const Otp = ({ route }) => {
             if (type) {
               navigation.navigate('NewPassword');
             } else {
-              navigation.navigate('Main');
+              navigation.navigate('Main', {screen: 'SetLocation'});
             }
           }}
         >

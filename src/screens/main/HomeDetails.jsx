@@ -1,6 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { View, Image, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  View,
+  Image,
+  FlatList,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import AppHeader from '../../components/AppHeader';
 import AppColors from '../../utils/AppColors';
 import { useNavigation } from '@react-navigation/native';
@@ -19,12 +25,12 @@ import Background from '../../utils/Background';
 import { Color } from '../../utils/Colors';
 import StyleButton from '../../components/StyleButton';
 import ReviewCard from '../../components/ReviewCard';
+import ProductCard from '../../components/ProductCard';
 
 const menuData = [
-  { id: 1, title: 'Acrylic Set' },
-  { id: 2, title: 'Manicure' },
-  { id: 3, title: 'Pedicure' },
-  { id: 4, title: 'Nail Art' },
+  { id: 1, title: 'Services' },
+  { id: 2, title: 'Stylists' },
+  { id: 3, title: 'Product' },
 ];
 
 const cardData = [
@@ -72,6 +78,14 @@ const reviewData = [
   },
 ];
 
+const product = [
+  { id: 1, image: APPImages.product, name: 'Deep Mask', price: '$50.00' },
+  { id: 2, image: APPImages.product, name: 'Deep Mask', price: '$50.00' },
+  { id: 3, image: APPImages.product, name: 'Deep Mask', price: '$50.00' },
+  { id: 4, image: APPImages.product, name: 'Deep Mask', price: '$50.00' },
+  { id: 5, image: APPImages.product, name: 'Deep Mask', price: '$50.00' },
+];
+
 const HomeDetails = () => {
   const navigation = useNavigation();
   const [menu, setMenu] = useState({ id: 1 });
@@ -98,7 +112,7 @@ const HomeDetails = () => {
         <LineBreak space={3} />
         <AppText
           title="Saloon name here"
-          textSize={3}
+          textSize={2.5}
           textFontWeight
           textColor={AppColors.WHITE}
         />
@@ -155,6 +169,7 @@ const HomeDetails = () => {
         <FlatList
           data={menuData}
           horizontal
+          showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ gap: 15 }}
           renderItem={({ item }) => {
             return (
@@ -162,11 +177,13 @@ const HomeDetails = () => {
                 <AppText
                   title={item.title}
                   borderBottomWidth={menu.id === item.id ? 3 : 0}
-                  paddingBottom={menu.id === item.id ? 4 : 0}
+                  paddingBottom={menu.id === item.id ? 6 : 0}
+                  textwidth={30}
+                  textAlignment={'center'}
                   borderBottomColor={
                     menu.id === item.id ? Color('gold') : AppColors.WHITE
                   }
-                  textSize={1.8}
+                  textSize={2.2}
                   textColor={
                     menu.id === item.id ? Color('gold') : AppColors.DARKGRAY
                   }
@@ -174,6 +191,21 @@ const HomeDetails = () => {
               </TouchableOpacity>
             );
           }}
+        />
+
+        <LineBreak space={2} />
+
+        <FlatList
+          data={product}
+          horizontal
+          contentContainerStyle={{ gap: responsiveWidth(5) }}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <ProductCard
+              item={item}
+              onCardPress={() => navigation.navigate('ProductDetails')}
+            />
+          )}
         />
 
         <LineBreak space={2} />
@@ -319,7 +351,7 @@ const HomeDetails = () => {
         <LineBreak space={2} />
         <FlatList
           data={reviewData}
-          contentContainerStyle={{gap: 10}}
+          contentContainerStyle={{ gap: 10 }}
           horizontal
           renderItem={({ item }) => (
             <ReviewCard

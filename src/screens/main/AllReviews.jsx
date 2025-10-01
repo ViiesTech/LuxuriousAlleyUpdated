@@ -100,7 +100,7 @@ const AllReviews = () => {
 
       <View>
         <StyleButton
-          onPress={() => {}}
+          onPress={() => navigation.navigate('RateYourExperience')}
         >{`Add Review`}</StyleButton>
       </View>
     </Background>
