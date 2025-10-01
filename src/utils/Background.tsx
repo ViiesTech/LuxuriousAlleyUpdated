@@ -6,14 +6,15 @@ import { Color } from './Colors.tsx';
 const { width, height } = Dimensions.get('screen');
 
 interface Props {
-    children: any
+    children: any;
+    contentContainerStyle: any;
 }
-const Background = ({ children }: Props) => {
+const Background = ({ children, contentContainerStyle }: Props) => {
     return (
         <SafeAreaView style={styles.safeAreaView}>
             <Image source={require('../assets/background.png')} style={styles.backgroundImage} />
             <View style={styles.content}>
-                <ScrollView style={styles.safeAreaView} showsVerticalScrollIndicator={false}>
+                <ScrollView style={styles.safeAreaView} contentContainerStyle={contentContainerStyle} showsVerticalScrollIndicator={false}>
                     {children}
                 </ScrollView>
             </View>

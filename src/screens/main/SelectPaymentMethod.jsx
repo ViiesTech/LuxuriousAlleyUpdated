@@ -36,13 +36,14 @@ const timesData = [
   { id: 3, time: 'Google Pay' },
 ];
 
-const SelectPaymentMethod = () => {
+const SelectPaymentMethod = ({route}) => {
   const navigation = useNavigation();
   const [isSelectedCard, setIsSelectedCard] = useState({ id: 0 });
   const [isCardAdded, setIsCardAdded] = useState(false);
   const [visibleConfirmationModal, setVisibleConfirmationModal] = useState({
     id: 0,
   });
+  const isCheckout = route?.params?.isCheckout;
 
   return (
     <Background>
@@ -325,9 +326,9 @@ const SelectPaymentMethod = () => {
         {/* <LoadingModal /> */}
         <ConfirmationModal
           iconName={'check'}
-          title={'You nail appointment is confirmed!'}
+          title={isCheckout ? 'Congrats!' : 'You nail appointment is confirmed!'}
           subTitle={
-            'Thank you for your payment. We look forward to seeing you soon.'
+           isCheckout ? 'Your Order has Been Placed' :  'Thank you for your payment. We look forward to seeing you soon.'
           }
           buttonOneTitle={'View Receipt'}
           buttonTwoTitle={'Back to Home'}

@@ -62,6 +62,6 @@ export default StyleButton;
 
 const styles = StyleSheet.create({
     btn: {
-        borderRadius: 10,
+        borderRadius: 1000,
     }
 })

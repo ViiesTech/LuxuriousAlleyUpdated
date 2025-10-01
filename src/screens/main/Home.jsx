@@ -122,6 +122,7 @@ const Home = () => {
             paddingVertical: responsiveHeight(1),
             borderRadius: 10,
           }}
+          onPress={() => navigation.navigate('Notification')}
         >
           <Ionicons
             name={'notifications-outline'}

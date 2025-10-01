@@ -11,9 +11,10 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 type Props = {
     item?: any;
     onCardPress?: any;
+    isChangedCartPosition: any,
 }
 
-const ProductCard = ({ item, onCardPress }: Props) => {
+const ProductCard = ({ item, onCardPress, isChangedCartPosition }: Props) => {
     return (
         <TouchableOpacity
             style={{
@@ -28,7 +29,7 @@ const ProductCard = ({ item, onCardPress }: Props) => {
         >
             <Image
                 source={item.image}
-                style={{ width: 150, height: 150, borderRadius: 10 }}
+                style={{ width: 140, height: 140, borderRadius: 10 }}
             />
             <LineBreak space={2} />
 
@@ -43,17 +44,18 @@ const ProductCard = ({ item, onCardPress }: Props) => {
                     <AppText
                         title={item.name}
                         textColor={AppColors.WHITE}
-                        textSize={2}
+                        textSize={1.8}
                     />
                     <LineBreak space={0.5} />
                     <AppText
                         title={item.price}
                         textColor={AppColors.DARKGRAY}
-                        textSize={1.8}
-                        textwidth={20}
+                        textSize={1.5}
                     />
                 </View>
+            </View>
 
+            <View style={{ position: 'absolute', right: responsiveWidth(4), bottom: isChangedCartPosition ? responsiveHeight(6) : responsiveHeight(2) }}>
                 <TouchableOpacity
                     style={{
                         width: 40,
@@ -62,6 +64,8 @@ const ProductCard = ({ item, onCardPress }: Props) => {
                         borderRadius: 100,
                         justifyContent: 'center',
                         alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor: AppColors.WHITE,
                     }}
                 >
                     <MaterialIcons

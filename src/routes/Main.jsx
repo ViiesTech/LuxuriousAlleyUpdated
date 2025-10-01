@@ -31,6 +31,16 @@ import SetLocation from './../screens/main/SetLocation';
 import UseCurrentLocation from './../screens/main/UseCurrentLocation';
 import RateYourExperience from './../screens/main/RateYourExperience';
 import ProductDetails from './../screens/main/ProductDetails';
+import Cart from './../screens/main/Cart';
+import Checkout from './../screens/main/Checkout';
+import ChatMessages from './../screens/main/ChatMessages';
+import AccountDetail from './../screens/main/profile/AccountDetail';
+import PrivacyPolicy from './../screens/main/profile/PrivacyPolicy';
+import HelpAndService from './../screens/main/profile/HelpAndService';
+import About from './../screens/main/profile/About';
+import Language from './../screens/main/profile/Language';
+import Security from './../screens/main/profile/Security';
+import Notification from './../screens/main/profile/Notification';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -49,6 +59,7 @@ const Main = () => {
       <Stack.Screen name="BookingSummary" component={BookingSummary} />
       <Stack.Screen name="SelectPaymentMethod" component={SelectPaymentMethod} />
       <Stack.Screen name="DownloadReceipt" component={DownloadReceipt} />
+      <Stack.Screen name="ChatMessages" component={ChatMessages} />
       <Stack.Screen name="SearchLocation" component={SearchLocation} />
       <Stack.Screen name="ChooseServices" component={ChooseServices} />
       <Stack.Screen name="RateYourExperience" component={RateYourExperience} />
@@ -56,6 +67,15 @@ const Main = () => {
       <Stack.Screen name="UseCurrentLocation" component={UseCurrentLocation} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="ProductDetails" component={ProductDetails} />
+      <Stack.Screen name="Language" component={Language} />
+      <Stack.Screen name="Security" component={Security} />
+      <Stack.Screen name="Notification" component={Notification} />
+      <Stack.Screen name="Cart" component={Cart} />
+      <Stack.Screen name="AccountDetail" component={AccountDetail} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+      <Stack.Screen name="HelpAndService" component={HelpAndService} />
+      <Stack.Screen name="About" component={About} />
+      <Stack.Screen name="Checkout" component={Checkout} />
       <Stack.Screen name="MapView" component={MapView} />
       <Stack.Screen name="Profile" component={MyTabs} />
     </Stack.Navigator>

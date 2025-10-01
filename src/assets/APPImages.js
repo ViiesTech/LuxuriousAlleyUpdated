@@ -15,4 +15,13 @@ export default APPImages = {
     marker_bg: require('./marker_bg.png'),
     user: require('./user.png'),
     product: require('./productTwo.webp'),
+    buy_now: require('./buy_now.png'),
+    view_receipt: require('./view_receipt.png'),
+    edit_profile: require('./edit_profile.png'),
+    us: require('./us.png'),
+    spain: require('./spain.png'),
+    france: require('./france.png'),
+    germany: require('./germany.png'),
+    india: require('./india.png'),
+    korea: require('./korea.png'),
 }

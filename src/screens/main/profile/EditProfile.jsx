@@ -4,13 +4,18 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import AppColors from '../../../utils/AppColors';
 import { useNavigation } from '@react-navigation/native';
 import AppHeader from '../../../components/AppHeader';
-import { responsiveFontSize } from '../../../utils/Responsive_Dimensions';
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from '../../../utils/Responsive_Dimensions';
 import APPImages from '../../../assets/APPImages';
 import Feather from 'react-native-vector-icons/Feather';
 import LineBreak from '../../../components/LineBreak';
 import AppTextInput from '../../../components/AppTextInput';
 import Background from '../../../utils/Background';
 import { Color } from '../../../utils/Colors';
+import StyleButton from '../../../components/StyleButton';
 
 const EditProfile = () => {
   const navigation = useNavigation();
@@ -83,6 +88,18 @@ const EditProfile = () => {
               inputWidth={78}
               borderColor={Color('gold')}
             />
+          </View>
+          <LineBreak space={2} />
+          <View>
+            <StyleButton
+              btnWidth={responsiveWidth(90)}
+              btnHeight={responsiveHeight(5)}
+              justifyContent={"center"}
+              color={AppColors.BLACK}
+              onPress={() => {}}
+            >
+              Save
+            </StyleButton>
           </View>
         </View>
       </View>

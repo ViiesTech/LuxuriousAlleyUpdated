@@ -14,6 +14,7 @@ import LineBreak from './LineBreak';
 import AppButton from './AppButton';
 import { Color } from '../utils/Colors';
 import StyleButton from './StyleButton';
+import APPImages from '../assets/APPImages';
 type props = {
   img?: any,
   title?: string,
@@ -158,6 +159,8 @@ const BookingCard = ({
                 justifyContent={'center'}
                 alignItems={'center'}
                 fontSize={2}
+                color={AppColors.BLACK}
+                background={APPImages.view_receipt}
               >
                 View Receipt
               </StyleButton>

@@ -1,13 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  Image,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, FlatList, TouchableOpacity, Switch } from 'react-native';
 import AppColors from '../../../utils/AppColors';
 import { useNavigation } from '@react-navigation/native';
 import AppHeader from '../../../components/AppHeader';
@@ -44,6 +37,7 @@ const profileMenus = [
     mrgnTop: 0,
     bottomWidth: 1,
     borderTopRadius: 10,
+    navTo: 'Security',
   },
   {
     id: 2,
@@ -58,6 +52,7 @@ const profileMenus = [
     mrgnTop: 0,
     bottomWidth: 0,
     borderBottomRadius: 10,
+    navTo: 'AccountDetail',
   },
   {
     id: 3,
@@ -85,6 +80,7 @@ const profileMenus = [
     title: 'Privacy and safety',
     mrgnTop: 0,
     bottomWidth: 1,
+    navTo: 'PrivacyPolicy',
   },
   {
     id: 5,
@@ -98,6 +94,7 @@ const profileMenus = [
     title: 'Accessibility, display and languages',
     mrgnTop: 0,
     bottomWidth: 1,
+    navTo: 'Language',
   },
   {
     id: 6,
@@ -112,6 +109,8 @@ const profileMenus = [
     mrgnTop: 0,
     bottomWidth: 0,
     borderBottomRadius: 10,
+    rightIcon: true,
+    navTo: 'Notification',
   },
   {
     id: 7,
@@ -126,6 +125,7 @@ const profileMenus = [
     mrgnTop: 2,
     bottomWidth: 1,
     borderTopRadius: 10,
+    navTo: 'HelpAndService',
   },
   {
     id: 8,
@@ -139,6 +139,7 @@ const profileMenus = [
     title: 'About',
     mrgnTop: 0,
     bottomWidth: 1,
+    navTo: 'About',
   },
   {
     id: 9,
@@ -159,6 +160,10 @@ const profileMenus = [
 
 const Profile = () => {
   const navigation = useNavigation();
+  const [isEnabled, setIsEnabled] = useState(false);
+
+  const toggleSwitch = () => setIsEnabled(previous => !previous);
+
   return (
     <Background>
       <AppHeader onPress={() => navigation.goBack()} title="Profile" />
@@ -190,11 +195,13 @@ const Profile = () => {
           <View>
             <StyleButton
               onPress={() => navigation.navigate('EditProfile')}
-              btnWidth={responsiveWidth(35)}
-              btnHeight={responsiveHeight(5)}
+              btnWidth={responsiveWidth(30)}
+              btnHeight={responsiveHeight(4)}
               justifyContent={'center'}
               alignItems={'center'}
-              fontSize={2}
+              fontSize={1.8}
+              background={APPImages.edit_profile}
+              color={AppColors.BLACK}
             >
               Edit Profile
             </StyleButton>
@@ -210,7 +217,7 @@ const Profile = () => {
               <TouchableOpacity
                 activeOpacity={0.6}
                 style={{
-                  backgroundColor: Color('lightTheme'),
+                  backgroundColor: Color('cardColor'),
                   marginTop: responsiveHeight(item.mrgnTop),
                   paddingHorizontal: responsiveWidth(4),
                   borderTopLeftRadius: item.borderTopRadius
@@ -229,6 +236,8 @@ const Profile = () => {
                 onPress={() => {
                   if (item.navTo) {
                     navigation.navigate(item.navTo);
+                  } else {
+                    console.log('not working');
                   }
                 }}
               >
@@ -249,6 +258,20 @@ const Profile = () => {
                     textColor={AppColors.WHITE}
                     textSize={2}
                   />
+                  {item.rightIcon && (
+                    <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                      <Switch
+                        trackColor={{
+                          false: Color('otpInputBackground'),
+                          true: Color('otpInputBackground'),
+                        }}
+                        thumbColor={isEnabled ? '#f4f3f4' : '#f4f3f4'}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleSwitch}
+                        value={isEnabled}
+                      />
+                    </View>
+                  )}
                 </View>
               </TouchableOpacity>
             );
