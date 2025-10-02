@@ -30,7 +30,7 @@ import ProductCard from '../../components/ProductCard';
 const menuData = [
   { id: 1, title: 'Services' },
   { id: 2, title: 'Stylists' },
-  { id: 3, title: 'Product' },
+  { id: 3, title: 'Products' },
 ];
 
 const cardData = [
@@ -193,81 +193,59 @@ const HomeDetails = () => {
           }}
         />
 
-        <LineBreak space={2} />
+        {menu.id == 3 && <LineBreak space={2} />}
 
-        <FlatList
-          data={product}
-          horizontal
-          contentContainerStyle={{ gap: responsiveWidth(5) }}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <ProductCard
-              item={item}
-              onCardPress={() => navigation.navigate('ProductDetails')}
-            />
-          )}
-        />
+        {menu.id == 3 && (
+          <FlatList
+            data={product}
+            horizontal
+            contentContainerStyle={{ gap: responsiveWidth(5) }}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <ProductCard
+                item={item}
+                onCardPress={() => navigation.navigate('ProductDetails')}
+              />
+            )}
+          />
+        )}
 
-        <LineBreak space={2} />
+        {menu.id == 1 && <LineBreak space={2} />}
 
-        <FlatList
-          data={cardData}
-          ItemSeparatorComponent={<LineBreak space={2} />}
-          renderItem={({ item }) => {
-            return (
-              <View
-                style={{
-                  borderRadius: responsiveHeight(1.5),
-                  backgroundColor: Color('cardColor'),
-                  paddingHorizontal: responsiveWidth(4),
-                  paddingVertical: responsiveHeight(2),
-                  borderWidth: 1,
-                  borderColor: Color('gold'),
-                }}
-              >
+        {menu.id == 1 && (
+          <FlatList
+            data={cardData}
+            ItemSeparatorComponent={<LineBreak space={2} />}
+            renderItem={({ item }) => {
+              return (
                 <View
                   style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
+                    borderRadius: responsiveHeight(1.5),
+                    backgroundColor: Color('cardColor'),
+                    paddingHorizontal: responsiveWidth(4),
+                    paddingVertical: responsiveHeight(2),
+                    borderWidth: 1,
+                    borderColor: Color('gold'),
                   }}
                 >
-                  <View>
-                    <AppText
-                      title={item.colorName}
-                      textSize={2.2}
-                      textFontWeight
-                      textColor={AppColors.WHITE}
-                    />
-                    <LineBreak space={0.5} />
-                    <View style={{ flexDirection: 'row', gap: 20 }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <View>
                       <AppText
-                        title={item.amount}
-                        textSize={1.5}
-                        textColor={
-                          selectedItems.some(i => i.id === item.id)
-                            ? AppColors.WHITE
-                            : AppColors.DARKGRAY
-                        }
+                        title={item.colorName}
+                        textSize={2.2}
+                        textFontWeight
+                        textColor={AppColors.WHITE}
                       />
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          gap: 6,
-                        }}
-                      >
-                        <AntDesign
-                          name={'clockcircleo'}
-                          size={responsiveFontSize(1.5)}
-                          color={
-                            selectedItems.some(i => i.id === item.id)
-                              ? AppColors.WHITE
-                              : AppColors.DARKGRAY
-                          }
-                        />
+                      <LineBreak space={0.5} />
+                      <View style={{ flexDirection: 'row', gap: 20 }}>
                         <AppText
-                          title={item.time}
+                          title={item.amount}
                           textSize={1.5}
                           textColor={
                             selectedItems.some(i => i.id === item.id)
@@ -275,36 +253,62 @@ const HomeDetails = () => {
                               : AppColors.DARKGRAY
                           }
                         />
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            gap: 6,
+                          }}
+                        >
+                          <AntDesign
+                            name={'clockcircleo'}
+                            size={responsiveFontSize(1.5)}
+                            color={
+                              selectedItems.some(i => i.id === item.id)
+                                ? AppColors.WHITE
+                                : AppColors.DARKGRAY
+                            }
+                          />
+                          <AppText
+                            title={item.time}
+                            textSize={1.5}
+                            textColor={
+                              selectedItems.some(i => i.id === item.id)
+                                ? AppColors.WHITE
+                                : AppColors.DARKGRAY
+                            }
+                          />
+                        </View>
                       </View>
                     </View>
-                  </View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSelectedItems(prev => {
-                        const exists = prev.some(i => i.id === item.id);
-                        if (exists) {
-                          return prev.filter(i => i.id !== item.id);
-                        } else {
-                          return [...prev, { ...item }];
+                    <TouchableOpacity
+                      onPress={() => {
+                        setSelectedItems(prev => {
+                          const exists = prev.some(i => i.id === item.id);
+                          if (exists) {
+                            return prev.filter(i => i.id !== item.id);
+                          } else {
+                            return [...prev, { ...item }];
+                          }
+                        });
+                      }}
+                    >
+                      <AntDesign
+                        name={
+                          selectedItems.some(i => i.id === item.id)
+                            ? 'checkcircle'
+                            : 'pluscircleo'
                         }
-                      });
-                    }}
-                  >
-                    <AntDesign
-                      name={
-                        selectedItems.some(i => i.id === item.id)
-                          ? 'checkcircle'
-                          : 'pluscircleo'
-                      }
-                      size={responsiveFontSize(2.7)}
-                      color={AppColors.WHITE}
-                    />
-                  </TouchableOpacity>
+                        size={responsiveFontSize(2.7)}
+                        color={AppColors.WHITE}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-            );
-          }}
-        />
+              );
+            }}
+          />
+        )}
 
         <LineBreak space={2} />
 

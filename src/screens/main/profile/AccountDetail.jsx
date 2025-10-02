@@ -79,7 +79,7 @@ const AccountDetail = () => {
               }}
             >
               {/* One Column */}
-              <View style={{ alignItems: 'center', flex: 1 }}>
+              <View style={{ alignItems: 'center', }}>
                 <AppText
                   title={item.title}
                   textColor={AppColors.WHITE}

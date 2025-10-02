@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         width: responsiveWidth(70),
         padding: responsiveHeight(1.5),
-        backgroundColor: Color('lightTheme'),
+        backgroundColor: Color('cardColor'),
     },
     imageStyle: {
         height: responsiveHeight(6),
