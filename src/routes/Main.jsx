@@ -30,6 +30,7 @@ import ChooseServices from './../screens/main/ChooseServices';
 import SetLocation from './../screens/main/SetLocation';
 import UseCurrentLocation from './../screens/main/UseCurrentLocation';
 import RateYourExperience from './../screens/main/RateYourExperience';
+import ChatList from './../screens/main/ChatList';
 import ProductDetails from './../screens/main/ProductDetails';
 import Cart from './../screens/main/Cart';
 import Checkout from './../screens/main/Checkout';
@@ -41,6 +42,8 @@ import About from './../screens/main/profile/About';
 import Language from './../screens/main/profile/Language';
 import Security from './../screens/main/profile/Security';
 import Notification from './../screens/main/profile/Notification';
+import AllProducts from './../screens/main/AllProducts';
+import OrderDetails from '../screens/main/bookings/OrderDetails';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -57,7 +60,10 @@ const Main = () => {
         component={DateAndTimeSelection}
       />
       <Stack.Screen name="BookingSummary" component={BookingSummary} />
-      <Stack.Screen name="SelectPaymentMethod" component={SelectPaymentMethod} />
+      <Stack.Screen
+        name="SelectPaymentMethod"
+        component={SelectPaymentMethod}
+      />
       <Stack.Screen name="DownloadReceipt" component={DownloadReceipt} />
       <Stack.Screen name="ChatMessages" component={ChatMessages} />
       <Stack.Screen name="SearchLocation" component={SearchLocation} />
@@ -76,7 +82,10 @@ const Main = () => {
       <Stack.Screen name="HelpAndService" component={HelpAndService} />
       <Stack.Screen name="About" component={About} />
       <Stack.Screen name="Checkout" component={Checkout} />
+      <Stack.Screen name="OrderDetails" component={OrderDetails} />
+      <Stack.Screen name="AllProducts" component={AllProducts} />
       <Stack.Screen name="MapView" component={MapView} />
+      <Stack.Screen name="ChatList" component={ChatList} />
       <Stack.Screen name="Profile" component={MyTabs} />
     </Stack.Navigator>
   );

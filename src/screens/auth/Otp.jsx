@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Platform,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import React, { useState } from 'react';
 import AppText from '../../components/AppTextComps/AppText';
@@ -24,20 +25,64 @@ import { useNavigation } from '@react-navigation/native';
 import Background from '../../utils/Background';
 import LineBreak from '../../components/LineBreak';
 import { Color } from '../../utils/Colors';
+import {
+  forgotPasswordUser,
+  RegisterUser,
+  ShowToast,
+  verifyForgotPassOtp,
+  verifyOtp,
+} from '../../GlobalFunctions';
+import { useDispatch } from 'react-redux';
 
-const Otp = ({ route }) => {
+const Otp = ({ navigation, route }) => {
   const [value, setValue] = useState();
   const ref = useBlurOnFulfill({ value, cellCount: 4 });
-  const navigation = useNavigation();
-  const type = route?.params?.type;
+  const { registerUser, email, userName, password, token } = route?.params;
+  const [isLoading, setIsLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const dispatch = useDispatch();
+  console.log('register,', registerUser, 'otp', value, 'token', token, value);
+  const verifyOtpHandler = async () => {
+    if (!value || value.length !== 4) {
+      return ShowToast('error', 'Please enter a valid 4-digit OTP');
+    }
+    setIsLoading(true);
+    try {
+      registerUser
+        ? await verifyOtp(token, value, navigation, dispatch)
+        : await verifyForgotPassOtp(email, value, navigation);
 
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+  const resendOtpForRegister = async () => {
+    setResendLoading(true);
+    try {
+      await RegisterUser(userName, email, password, navigation);
+      setResendLoading(false);
+    } catch (error) {
+      setResendLoading(false);
+    }
+  };
+
+  const resendOtpForForgotPass = async () => {
+    setResendLoading(true);
+    try {
+      await forgotPasswordUser(email, navigation);
+      setResendLoading(false);
+    } catch (error) {
+      setResendLoading(false);
+    }
+  };
   return (
     <Background>
       <LineBreak space={4} />
       <View style={{ flex: 1 }}>
         <View style={{ gap: 10 }}>
           <AppText
-            title={type ? 'Email Verification' : 'Verify Your Identity'}
+            title={registerUser ? 'Verify Your Identity' : 'Email Verification'}
             textSize={3}
             textColor={AppColors.WHITE}
             textAlignment={'center'}
@@ -45,9 +90,9 @@ const Otp = ({ route }) => {
           />
           <AppText
             title={
-              type
-                ? 'Please type OTP code that we give you'
-                : 'We’ve sent a 4-digit code to 071*****05 Please enter it below.'
+              registerUser
+                ? `We’ve sent a 4-digit code to ${email} Please enter it below.`
+                : 'Please type OTP code that we give you'
             }
             textSize={1.9}
             textwidth={80}
@@ -78,44 +123,60 @@ const Otp = ({ route }) => {
             </Text>
           )}
         />
-
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 3,
-            marginTop: 20,
-          }}
-        >
-          <AppText
-            title="Didn’t receive a code?"
-            textSize={1.9}
-            textAlignment={'center'}
-            textColor={'#939393'}
-          />
-          <TouchableOpacity>
+        {resendLoading ? (
+          <View style={{ top: responsiveHeight(5) }}>
+            <ActivityIndicator size={'large'} color={Color('gold')} />
+          </View>
+        ) : (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 3,
+              marginTop: 20,
+            }}
+          >
             <AppText
-              title="Resend"
+              title="Didn’t receive a code?"
               textSize={1.9}
               textAlignment={'center'}
-              textColor={Color('gold')}
+              textColor={'#939393'}
             />
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity
+              onPress={
+                registerUser ? resendOtpForRegister : resendOtpForForgotPass
+              }
+            >
+              <AppText
+                title="Resend"
+                textSize={1.9}
+                textAlignment={'center'}
+                textColor={Color('gold')}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
       <LineBreak space={50} />
       <View style={{ flex: 1, justifyContent: 'flex-end' }}>
         <StyleButton
-          onPress={() => {
-            if (type) {
-              navigation.navigate('NewPassword');
-            } else {
-              navigation.navigate('Main', {screen: 'SetLocation'});
-            }
-          }}
+          // onPress={() => {
+          //   if (registerUser) {
+          //     navigation.navigate('Main', { screen: 'SetLocation' });
+          //   } else {
+          //     navigation.navigate('NewPassword');
+          //   }
+          // }}
+          onPress={verifyOtpHandler}
         >
-          {type ? 'Verify Email' : 'Continue'}
+          {isLoading ? (
+            <ActivityIndicator size={'large'} color={AppColors.BLACK} />
+          ) : registerUser ? (
+            'Continue'
+          ) : (
+            'Verify Email'
+          )}
         </StyleButton>
       </View>
     </Background>

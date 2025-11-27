@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { View, Modal } from 'react-native';
+import { View, Modal, ActivityIndicator } from 'react-native';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -16,6 +16,7 @@ const CancelBookingModal = ({
   visible,
   handleCancelButtonPress,
   handleAppointmentButtonPress,
+  isCancelLoading,
 }) => {
   return (
     <Modal transparent={true} animationType="slide" visible={visible}>
@@ -78,7 +79,13 @@ const CancelBookingModal = ({
             <LineBreak space={2} />
 
             <AppButton
-              title={`Yes, Cancel Booking`}
+              title={
+                isCancelLoading ? (
+                  <ActivityIndicator size={'large'} color={AppColors.WHITE} />
+                ) : (
+                  `Yes, Cancel Booking`
+                )
+              }
               handlePress={handleCancelButtonPress}
               bgColor={Color('otpInputBackground')}
               textColor={AppColors.WHITE}
@@ -89,9 +96,7 @@ const CancelBookingModal = ({
             <LineBreak space={1} />
 
             <View>
-              <StyleButton
-                onPress={handleAppointmentButtonPress}
-              >
+              <StyleButton onPress={handleAppointmentButtonPress}>
                 Keep Appointment
               </StyleButton>
             </View>

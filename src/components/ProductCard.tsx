@@ -7,14 +7,17 @@ import AppColors from '../utils/AppColors';
 import LineBreak from './LineBreak';
 import AppText from './AppTextComps/AppText';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { ImageBaseUrl } from '../assets/Utils/BaseUrl';
 
 type Props = {
     item?: any;
     onCardPress?: any;
+    onCartPress?: any;
     isChangedCartPosition: any,
 }
 
-const ProductCard = ({ item, onCardPress, isChangedCartPosition }: Props) => {
+const ProductCard = ({ item, onCardPress, onCartPress, isChangedCartPosition }: Props) => {
+    console.log('itemdsdsdsa', item)
     return (
         <TouchableOpacity
             style={{
@@ -28,7 +31,7 @@ const ProductCard = ({ item, onCardPress, isChangedCartPosition }: Props) => {
             onPress={onCardPress}
         >
             <Image
-                source={item.image}
+                source={{ uri: `${ImageBaseUrl}${item?.images?.[0]}` }}
                 style={{ width: 140, height: 140, borderRadius: 10 }}
             />
             <LineBreak space={2} />
@@ -42,13 +45,24 @@ const ProductCard = ({ item, onCardPress, isChangedCartPosition }: Props) => {
             >
                 <View>
                     <AppText
-                        title={item.name}
+                        numberOfLines={2}
+                        textwidth={30}
+                        textFontWeight
+                        title={item?.salonId?.bName}
+                        textColor={AppColors.WHITE}
+                        textSize={1.9}
+                    />
+                    <LineBreak space={1} />
+                    <AppText
+                        numberOfLines={1}
+                        textwidth={21}
+                        title={item?.productName}
                         textColor={AppColors.WHITE}
                         textSize={1.8}
                     />
                     <LineBreak space={0.5} />
                     <AppText
-                        title={item.price}
+                        title={`$${item?.price}`}
                         textColor={AppColors.DARKGRAY}
                         textSize={1.5}
                     />
@@ -57,6 +71,7 @@ const ProductCard = ({ item, onCardPress, isChangedCartPosition }: Props) => {
 
             <View style={{ position: 'absolute', right: responsiveWidth(4), bottom: isChangedCartPosition ? responsiveHeight(6) : responsiveHeight(2) }}>
                 <TouchableOpacity
+                    onPress={onCartPress}
                     style={{
                         width: 40,
                         height: 40,

@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import { View, Text, TextInput } from 'react-native'
 import React from 'react'
 import { responsiveFontSize, responsiveHeight, responsiveWidth } from '../utils/Responsive_Dimensions'
@@ -11,13 +12,16 @@ type props = {
   borderWidth?: any
   borderColor?: any
   paddingHorizontal?: any;
-borderRadius?:any
-placeholderTextColor?:any;
-inputHeight?:any;
-multiline?:any;
-textAlignVertical?:any;
+  borderRadius?: any
+  placeholderTextColor?: any;
+  inputHeight?: any;
+  multiline?: any;
+  textAlignVertical?: any;
+  onChangeText?: () => void;
+  keyboardType?: string,
+
 }
-const AppTextInput = ({ logo, inputBgColour, textAlignVertical, inputHeight, multiline, placeholderTextColor, inputPlaceHolder, borderWidth, borderColor, inputWidth = 80, containerBg, paddingHorizontal, borderRadius }: props) => {
+const AppTextInput = ({ logo, inputBgColour, textAlignVertical, inputHeight, multiline, placeholderTextColor, inputPlaceHolder, borderWidth, borderColor, inputWidth = 80, containerBg, paddingHorizontal, borderRadius, onChangeText, keyboardType }: props) => {
   return (
     <View style={{
       flexDirection: 'row',
@@ -28,6 +32,8 @@ const AppTextInput = ({ logo, inputBgColour, textAlignVertical, inputHeight, mul
       }
 
       <TextInput
+        keyboardType={keyboardType || 'default'}
+        onChangeText={onChangeText}
         placeholder={inputPlaceHolder}
         multiline={multiline}
         placeholderTextColor={placeholderTextColor ? placeholderTextColor : AppColors.WHITE}

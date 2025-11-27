@@ -17,10 +17,11 @@ interface Props {
     numberOfLines?: number,
     onChange?: any,
     value?: any,
-    onBlur?: any
+    onBlur?: any,
+    keyboardType?: string,
 }
 
-const Input = ({ onBlur, secure, icon, label, labelText, color, placeholder, placeholderColor, style, numberOfLines, onChange, value }: Props) => {
+const Input = ({ onBlur, keyboardType, secure, icon, label, labelText, color, placeholder, placeholderColor, style, numberOfLines, onChange, value }: Props) => {
     const [toggleSecure, setToggleSecure] = useState(secure);
     return (
         <>
@@ -38,7 +39,7 @@ const Input = ({ onBlur, secure, icon, label, labelText, color, placeholder, pla
                     gap: 10,
                 }}>
                     {icon}
-                    <TextInput onBlur={onBlur} value={value} onChangeText={(value) => onChange(value)} multiline={numberOfLines && numberOfLines > 0 ? true : false} numberOfLines={numberOfLines} secureTextEntry={toggleSecure} style={[styles.field, { color: color, textAlignVertical: numberOfLines && numberOfLines > 0 ? 'top' : 'center' }]} placeholder={placeholder} placeholderTextColor={placeholderColor} />
+                    <TextInput keyboardType={keyboardType || 'default'} onBlur={onBlur} value={value} onChangeText={(value) => onChange(value)} multiline={numberOfLines && numberOfLines > 0 ? true : false} numberOfLines={numberOfLines} secureTextEntry={toggleSecure} style={[styles.field, { color: color, textAlignVertical: numberOfLines && numberOfLines > 0 ? 'top' : 'center' }]} placeholder={placeholder} placeholderTextColor={placeholderColor} />
                 </View>
             </View>
         </>

@@ -14,10 +14,10 @@ const { width, height } = Dimensions.get('screen');
 interface Props {
 }
 
-const Drawer = ({}: Props) => {
+const Drawer = ({ }: Props) => {
     // Create animated value for the horizontal position
     const slideAnim = new Animated.Value(-width);
-    const showDrawer = useSelector(({drawer}: {drawer: any}) => drawer?.drawer);
+    const showDrawer = useSelector(({ drawer }: { drawer: any }) => drawer?.drawer);
     const dispatch = useDispatch();
     const { navigate } = useNavigation();
 
@@ -28,10 +28,10 @@ const Drawer = ({}: Props) => {
             useNativeDriver: true, // Use native driver for better performance
         }).start();
     }, [slideAnim, showDrawer]);
-    
+
     if (!showDrawer) return;
 
-    const DrawerItem = ({ icon, label, screen }: {icon: any, label: string, screen: string}) => {
+    const DrawerItem = ({ icon, label, screen }: { icon: any, label: string, screen: string }) => {
         const clicked = () => {
             navigate(screen);
             dispatch(hideDrawer());
@@ -45,10 +45,10 @@ const Drawer = ({}: Props) => {
                         gap: 15,
                         paddingVertical: height * 0.005
                     }}>
-                        <View style={{alignItems: 'center', justifyContent: 'center', padding: 10, backgroundColor: Color('gold_50'), borderRadius: 100}}>
+                        <View style={{ alignItems: 'center', justifyContent: 'center', padding: 10, backgroundColor: Color('gold_50'), borderRadius: 100 }}>
                             {icon}
                         </View>
-                        <Pera style={{fontFamily: "Lora-Regular"}}>{label}</Pera>
+                        <Pera style={{ fontFamily: "Lora-Regular" }}>{label}</Pera>
                     </View>
                 </TouchableOpacity>
             </>
@@ -65,61 +65,61 @@ const Drawer = ({}: Props) => {
             ]}
         >
             <Image source={require('../../assets/background.png')} style={styles.backgroundImage} />
-            
-            <View style={{width: width * 0.9, paddingTop: height * 0.07, alignSelf: 'center', height: height * 0.93}}>
-                <View style={{flexDirection: 'row', alignItems: 'center', gap: 20}}>
+
+            <View style={{ width: width * 0.9, paddingTop: height * 0.07, alignSelf: 'center', height: height * 0.93 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
                     <BackButton onPress={() => dispatch(hideDrawer())} children={undefined} />
                     <H4>Sidemenu</H4>
                 </View>
                 <Br space={0.03} />
-                <View style={{flex: 1}}>
-                    <DrawerItem 
+                <View style={{ flex: 1 }}>
+                    <DrawerItem
                         icon={<Home size="20" color={Color('navbarIcon')} />}
                         label="Home"
                         screen="Home"
                     />
-                    <DrawerItem 
+                    <DrawerItem
                         icon={<Profile size="20" color={Color('navbarIcon')} />}
                         label="Profile"
                         screen="MyProfile"
                     />
-                    <DrawerItem 
+                    <DrawerItem
                         icon={<Location size="20" color={Color('navbarIcon')} />}
                         label="Location"
                         screen="Nearby"
                     />
-                    <DrawerItem 
+                    <DrawerItem
                         icon={<ShoppingCart size="20" color={Color('navbarIcon')} />}
                         label="Cart"
                         screen="Inbox"
                     />
-                    <DrawerItem 
+                    <DrawerItem
                         icon={<Bag2 size="20" color={Color('navbarIcon')} />}
                         label="Order Products"
                         screen="OrderProduct"
                     />
-                    <DrawerItem 
+                    <DrawerItem
                         icon={<Calendar size="20" color={Color('navbarIcon')} />}
                         label="My Appointments"
                         screen="Appointments"
                     />
-                    <DrawerItem 
+                    <DrawerItem
                         icon={<Message size="20" color={Color('navbarIcon')} />}
                         label="Inbox"
                         screen="Inbox"
                     />
-                    <DrawerItem 
+                    <DrawerItem
                         icon={<Profile2User size="20" color={Color('navbarIcon')} />}
                         label="Service Provider"
                         screen="Home"
                     />
-                    <DrawerItem 
+                    <DrawerItem
                         icon={<ConvertCard size="20" color={Color('navbarIcon')} />}
                         label="My Cards"
                         screen="Home"
                     />
                 </View>
-                <DrawerItem 
+                <DrawerItem
                     icon={<ArrowRight size="20" color={Color('navbarIcon')} />}
                     label="Logout"
                     screen="Logout"

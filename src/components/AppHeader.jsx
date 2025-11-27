@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import AppText from './AppTextComps/AppText';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -12,7 +12,16 @@ import {
 import AppColors from '../utils/AppColors';
 import { Color } from '../utils/Colors';
 
-const AppHeader = ({ onPress, title, isTextAlignCentered, isHideFav }) => {
+const AppHeader = ({
+  onPress,
+  isFvrt = false,
+  showFvrtIcon = true,
+  title,
+  isTextAlignCentered,
+  isHideFav,
+  onFvrtsPress,
+  isHeartLoading = false,
+}) => {
   return (
     <View
       style={{
@@ -46,11 +55,17 @@ const AppHeader = ({ onPress, title, isTextAlignCentered, isHideFav }) => {
           color={Color('gold')}
         />
       </TouchableOpacity>
-      <AppText title={title} textSize={2.4} textFontWeight textColor={AppColors.WHITE} />
+      <AppText
+        title={title}
+        textSize={2.4}
+        textFontWeight
+        textColor={AppColors.WHITE}
+      />
       {title || isHideFav ? (
         <View />
-      ) : (
+      ) : showFvrtIcon ? (
         <TouchableOpacity
+          onPress={onFvrtsPress}
           style={{
             borderWidth: 1,
             padding: responsiveHeight(1.5),
@@ -58,13 +73,17 @@ const AppHeader = ({ onPress, title, isTextAlignCentered, isHideFav }) => {
             borderColor: Color('gold'),
           }}
         >
-          <AntDesign
-            name={'hearto'}
-            size={responsiveFontSize(2.7)}
-            color={Color('gold')}
-          />
+          {isHeartLoading ? (
+            <ActivityIndicator size={'small'} color={AppColors.themeColor} />
+          ) : (
+            <AntDesign
+              name={isFvrt ? 'heart' : 'hearto'}
+              size={responsiveFontSize(2.7)}
+              color={Color('gold')}
+            />
+          )}
         </TouchableOpacity>
-      )}
+      ) : null}
     </View>
   );
 };

@@ -24,4 +24,6 @@ export default APPImages = {
     germany: require('./germany.png'),
     india: require('./india.png'),
     korea: require('./korea.png'),
+    userDummy: require('./userDummy.png'),
+    userDummy2: require('./userDummy2.png'),
 }

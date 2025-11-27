@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, Image, Dimensions} from 'react-native';
+import { View, Text, TouchableOpacity, Image, Dimensions } from 'react-native';
 import React from 'react';
 import AppText from '../../components/AppTextComps/AppText';
 import {
@@ -23,48 +23,72 @@ import StyleButton from '../../components/StyleButton';
 const { width, height } = Dimensions.get('window');
 
 const Login = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
   return (
-
-      <LinearGradient  colors={[ AppColors.WHITE, AppColors.BLACK]} style={{flex:1, padding:20}} >
+    <LinearGradient
+      colors={[AppColors.WHITE, AppColors.BLACK]}
+      style={{ flex: 1, padding: 20 }}
+    >
       <View
         style={{
           height: responsiveHeight(10),
           justifyContent: 'flex-end',
           marginBottom: 20,
-        }}>
+        }}
+      >
         <Logo logoUrl={APPImages.LOGO} />
-
       </View>
-    
-      <View style={{flex: 1, justifyContent: 'flex-end', paddingVertical: responsiveHeight(8), gap: 20}}>
 
-       {/* <Logo logoUrl={APPImages.LOGO} logoWeight={responsiveHeight(20)} logoHeight={responsiveHeight(20)} logoReizeMode={'contain'}/> */}
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'flex-end',
+          paddingVertical: responsiveHeight(8),
+          gap: 20,
+        }}
+      >
+        {/* <Logo logoUrl={APPImages.LOGO} logoWeight={responsiveHeight(20)} logoHeight={responsiveHeight(20)} logoReizeMode={'contain'}/> */}
 
         <View>
-       <AppText title='Welcome to' textColor={AppColors.WHITE} textSize={4} textFontWeight={700}/>
-       <AppText title='Luxurious Alley' textColor={AppColors.WHITE} textSize={4.5} textFontWeight={700}/>
+          <AppText
+            title="Welcome to"
+            textColor={AppColors.WHITE}
+            textSize={4}
+            textFontWeight={700}
+          />
+          <AppText
+            title="Luxurious Alley"
+            textColor={AppColors.WHITE}
+            textSize={4.5}
+            textFontWeight={700}
+          />
         </View>
 
         <AppTextInput
-        inputPlaceHolder={'Enter your email or phone number'}
-        containerBg={AppColors.INPUTBG}
-        placeholderTextColor={AppColors.BLACK}
-      />
+          inputPlaceHolder={'Enter your email or phone number'}
+          containerBg={AppColors.INPUTBG}
+          placeholderTextColor={AppColors.BLACK}
+        />
 
-      <View>
-        <StyleButton onPress={() => navigation.navigate('Otp')} >Continue</StyleButton>
-      </View>
+        <View>
+          <StyleButton onPress={() => navigation.navigate('Otp')}>
+            Continue
+          </StyleButton>
+        </View>
 
-
-        <AppText title='Or' textAlignment={'center'} textSize={2} textColor={AppColors.WHITE}/>
+        <AppText
+          title="Or"
+          textAlignment={'center'}
+          textSize={2}
+          textColor={AppColors.WHITE}
+        />
 
         <View
           style={{
-
             justifyContent: 'flex-end',
             gap: 10,
-          }}>
+          }}
+        >
           <SocialAuthButton
             bgColor={AppColors.BLACK}
             title={'Continue with Apple'}
@@ -90,8 +114,7 @@ const Login = () => {
           />
         </View>
       </View>
-      </LinearGradient>
-
+    </LinearGradient>
   );
 };
 

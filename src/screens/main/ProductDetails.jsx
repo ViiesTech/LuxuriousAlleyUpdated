@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Image,
@@ -26,7 +26,14 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import ReviewCard from '../../components/ReviewCard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import StyleButton from '../../components/StyleButton';
-import Counter from '../../components/Counter';
+import { Counter } from '../../components/Counter';
+import { ImageBaseUrl } from '../../assets/Utils/BaseUrl';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../../redux/CartSlice';
+import { getReviewsByProductId, ShowToast } from '../../GlobalFunctions';
+import moment from 'moment';
+import { ReviewsLoader } from '../../components/Loaders';
+import { fetchProductReviewsById } from '../../redux/DataSlice';
 
 const colors = [
   { id: 1, color: '#FF0000', title: '#1231' },
@@ -41,48 +48,101 @@ const sizes = [
   { id: 3, size: 'Large' },
 ];
 
-const reviewData = [
-  {
-    id: 1,
-    profImage: APPImages.NAILS,
-    name: 'James Adrew',
-    date: '1 day ago',
-    rating: '5.0',
-    desc: 'Many thanks to james he is professional, Cleaner..',
-  },
-  {
-    id: 2,
-    profImage: APPImages.NAILS,
-    name: 'James Adrew',
-    date: '1 day ago',
-    rating: '5.0',
-    desc: 'Many thanks to james he is professional, Cleaner..',
-  },
-  {
-    id: 3,
-    profImage: APPImages.NAILS,
-    name: 'James Adrew',
-    date: '1 day ago',
-    rating: '5.0',
-    desc: 'Many thanks to james he is professional, Cleaner..',
-  },
-  {
-    id: 4,
-    profImage: APPImages.NAILS,
-    name: 'James Adrew',
-    date: '1 day ago',
-    rating: '5.0',
-    desc: 'Many thanks to james he is professional, Cleaner..',
-  },
-];
-
-const ProductDetails = () => {
+const ProductDetails = ({ route }) => {
   const navigation = useNavigation();
   const [selectedSize, setSelectedSize] = useState(0);
+  const {
+    _id,
+    productName,
+    images,
+    avgRating,
+    totalReviews,
+    price,
+    description,
+    stock,
+  } = route?.params?.data;
+  const salonId = route?.params?.data?.salonId?._id;
+  const { bName, bImage } = route?.params?.data?.salonId;
+  console.log('salonId', salonId, 'bImage', bImage);
+  const categoryId = route?.params?.data?.categoryId;
+  console.log('productid', _id);
+  const [count, setCount] = useState(0);
+  const [count2, setCount2] = useState(0);
+  const dispatch = useDispatch();
+  const { cart } = useSelector(state => state.cart);
+  console.log('avgRating.toFixed(0)', avgRating.toFixed(0));
+
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [reviewsData, setReviewsData] = useState([]);
+  const [reviewDetails, setReviewDetails] = useState({
+    avgRating: 0,
+    totalRatings: 0,
+  });
+  const { productReviews, loading } = useSelector(state => state.data);
+  console.log('reviewDetails', reviewDetails);
+
+  const isLoading = loading?.productReviews;
+  const reviews = productReviews?.[_id] || [];
+
+  console.log('reviews', reviews);
+  console.log('isLoading', isLoading);
+
+  useEffect(() => {
+    const existingData = productReviews?.[_id];
+
+    if (!existingData || existingData.length === 0) {
+      // Normal fetch with loader
+      dispatch(fetchProductReviewsById({ productId: _id }));
+    } else {
+      // Silent refresh (no loader)
+      dispatch(fetchProductReviewsById({ productId: _id, silent: true }));
+    }
+  }, [_id]);
+
+  const fetchProductReviewsHandler = async () => {
+    setReviewsLoading(true);
+    try {
+      const response = await getReviewsByProductId(_id);
+      console.log('resssponse', response.averageRating);
+      setReviewsLoading(false);
+      setReviewsData(response?.data);
+      setReviewDetails({
+        avgRating: response?.averageRating || 0,
+        totalRatings: response?.totalReviews || 0,
+      });
+    } catch (error) {
+      setReviewsLoading(false);
+      console.log('errror', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProductReviewsHandler();
+  }, []);
+
+  const handleAddToCart = () => {
+    if (count <= 0)
+      return ShowToast('error', 'Please Specify Quantity Of Your Product');
+
+    dispatch(
+      addToCart({
+        salonId,
+        product: {
+          productId: _id,
+          productName,
+          productImage: `${ImageBaseUrl}${images?.[0]}`,
+          price,
+          stock,
+          quantity: count, // use selected count
+        },
+      }),
+    );
+    navigation.navigate('Cart');
+  };
 
   return (
-    <Background>
-      <AppHeader onPress={() => navigation.goBack()} />
+    <Background contentContainerStyle={{ flex: 1 }}>
+      <AppHeader showFvrtIcon={false} onPress={() => navigation.goBack()} />
 
       <View
         style={{
@@ -90,7 +150,7 @@ const ProductDetails = () => {
         }}
       >
         <Image
-          source={APPImages.product}
+          source={{ uri: `${ImageBaseUrl}${images?.[0]}` }}
           style={{
             width: responsiveWidth(90),
             height: responsiveHeight(30),
@@ -99,7 +159,7 @@ const ProductDetails = () => {
         />
         <LineBreak space={3} />
         <AppText
-          title="Deep Mask Conditioner"
+          title={productName}
           textSize={2.5}
           textFontWeight
           textColor={AppColors.WHITE}
@@ -121,18 +181,18 @@ const ProductDetails = () => {
             }}
           >
             <AppText
-              title="$25.00"
+              title={`$${price}`}
               textSize={2.5}
               textColor={AppColors.WHITE}
             />
             <AppText
-              title="(34 available)"
+              title={`(${stock} available)`}
               textSize={1.6}
               textColor={AppColors.DARKGRAY}
             />
           </View>
 
-          <Counter />
+          <Counter stock={stock} count={count} setCount={setCount} />
         </View>
         <LineBreak space={2} />
         <View
@@ -142,7 +202,7 @@ const ProductDetails = () => {
             alignItems: 'center',
           }}
         >
-          {[...Array(5)].map((_, index) => (
+          {[...Array(Math.floor(Number(avgRating)))]?.map((_, index) => (
             <FontAwesome
               key={index}
               name="star"
@@ -151,8 +211,8 @@ const ProductDetails = () => {
             />
           ))}
         </View>
-        <LineBreak space={2} />
-        <View style={{ flexDirection: 'row', gap: responsiveWidth(4) }}>
+        {/* <LineBreak space={2} /> */}
+        {/* <View style={{ flexDirection: 'row', gap: responsiveWidth(4) }}>
           <AppText
             title="Color"
             textSize={2.5}
@@ -183,9 +243,9 @@ const ProductDetails = () => {
               </View>
             )}
           />
-        </View>
+        </View> */}
 
-        <View>
+        {/* <View>
           <AppText
             title="Size"
             textSize={2.5}
@@ -226,20 +286,20 @@ const ProductDetails = () => {
               </View>
             )}
           />
-        </View>
+        </View> */}
 
         <LineBreak space={2} />
 
         <View>
           <AppText
-            title="Description"
+            title={'Description'}
             textSize={2.5}
             textFontWeight
             textColor={AppColors.WHITE}
           />
 
           <AppText
-            title="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard"
+            title={description}
             textSize={1.9}
             textColor={AppColors.DARKGRAY}
           />
@@ -269,7 +329,7 @@ const ProductDetails = () => {
                 color={Color('gold')}
               />
               <AppText
-                title="4.9 (124)"
+                title={`${avgRating} (${totalReviews})`}
                 textSize={2.2}
                 textColor={AppColors.WHITE}
               />
@@ -278,20 +338,40 @@ const ProductDetails = () => {
         </View>
 
         <LineBreak space={2} />
-        <FlatList
-          data={reviewData}
-          contentContainerStyle={{ gap: 10 }}
-          horizontal
-          renderItem={({ item }) => (
-            <ReviewCard
-              day={item.date}
-              image={item.profImage}
-              name={item.name}
-              rating={item.rating}
-              desc={item.desc}
+        {isLoading ? (
+          <View>
+            <ReviewsLoader />
+          </View>
+        ) : reviews?.length < 1 ? (
+          <View style={{ marginVertical: responsiveHeight(1.5) }}>
+            <AppText
+              textAlignment="center"
+              textColor={AppColors.WHITE}
+              textSize={2.5}
+              title="No Reviews Found"
             />
-          )}
-        />
+          </View>
+        ) : (
+          <FlatList
+            data={reviews}
+            contentContainerStyle={{ gap: 10 }}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <ReviewCard
+                day={moment(item.createdAt).fromNow()}
+                image={
+                  item?.userId?.image
+                    ? { uri: `${ImageBaseUrl}${item?.userId?.image}` }
+                    : APPImages.userDummy
+                }
+                name={item?.userId?.username}
+                rating={item?.stars}
+                desc={item?.message}
+              />
+            )}
+          />
+        )}
         <LineBreak space={2} />
 
         <View
@@ -303,7 +383,13 @@ const ProductDetails = () => {
         >
           <TouchableOpacity
             style={[styles.btnContainer, { width: 50, height: 50 }]}
-            onPress={() => navigation.navigate('ChatMessages')}
+            onPress={() =>
+              navigation.navigate('ChatMessages', {
+                receiverId: salonId,
+                receiverName: bName,
+                receiverImage: bImage,
+              })
+            }
           >
             <Ionicons
               name={'chatbox-outline'}
@@ -313,6 +399,7 @@ const ProductDetails = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
+            onPress={handleAddToCart}
             style={[
               styles.btnContainer,
               { width: responsiveWidth(35), height: 50, borderRadius: 100 },
@@ -324,7 +411,14 @@ const ProductDetails = () => {
               textColor={AppColors.WHITE}
             />
           </TouchableOpacity>
-
+          {/* _id,
+    productName,
+    images,
+    avgRating,
+    totalReviews,
+    price,
+    description,
+    stock, */}
           <StyleButton
             btnWidth={responsiveWidth(35)}
             justifyContent={'center'}
@@ -332,7 +426,24 @@ const ProductDetails = () => {
             color={AppColors.BLACK}
             background={APPImages.buy_now}
             btnHeight={responsiveHeight(6)}
-            onPress={() => navigation.navigate('Cart')}
+            onPress={() => {
+              if (count <= 0) {
+                return ShowToast(
+                  'error',
+                  'Please Specify Quantity Of Your Product',
+                );
+              }
+              navigation.navigate('Checkout', {
+                isAddToCart: false,
+                salonId,
+                productId: _id,
+                productName,
+                images,
+                price,
+                stock,
+                count,
+              });
+            }}
           >{`Buy Now`}</StyleButton>
         </View>
 

@@ -60,14 +60,14 @@ const ChatCom = () => {
         <View style={styles.container}>
             {/* Header */}
             <View style={styles.header}>
-                <View style={{flexDirection: 'row', alignItems: 'center', gap: responsiveWidth(4)}}>
-                 <TouchableOpacity onPress={() => navigation.goBack()}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: responsiveWidth(4) }}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
                         <FontAwesome6 name="chevron-left" size={22} color={AppColors.WHITE} />
                     </TouchableOpacity>
-                <Image
-                    source={APPImages.NAILS}
-                    style={styles.avatar}
-                />
+                    <Image
+                        source={APPImages.NAILS}
+                        style={styles.avatar}
+                    />
                 </View>
                 <View>
                     <Text style={styles.name}>Martha Craig</Text>

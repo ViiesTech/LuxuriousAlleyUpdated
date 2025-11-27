@@ -22,6 +22,10 @@ type props = {
   date?: any,
   service?: any,
   bookingType?: any,
+  item?: any,
+  showBtnSideBySide?: false,
+  ratingToSalon?: false,
+  disabled?: false,
   cancelBookingOnPress?: () => void,
 };
 
@@ -40,11 +44,19 @@ const BookingCard = ({
   date,
   service,
   bookingType,
+  item,
+  showBtnSideBySide,
+  ratingToSalon,
+  disabled,
   cancelBookingOnPress,
 }: props) => {
   const navigation = useNavigation();
+  console.log('first', item);
   return (
-    <TouchableOpacity onPress={() => navigation.navigate('HomeDetails')}>
+    <TouchableOpacity
+      disabled={disabled}
+      onPress={() => navigation.navigate('HomeDetails')}
+    >
       <View
         style={{
           padding: 20,
@@ -90,7 +102,7 @@ const BookingCard = ({
             style={{
               height: responsiveHeight(10),
               width: responsiveHeight(10),
-              resizeMode: 'contain',
+              // resizeMode: 'contain',
               borderRadius: 10,
               marginRight: 10,
             }}
@@ -144,7 +156,7 @@ const BookingCard = ({
           >
             <AppButton
               title="Cancel Booking"
-              bgColor={Color('lightTheme')}
+              bgColor="transparent"
               textColor={AppColors.WHITE}
               borderWidth={1}
               borderColor={Color('gold')}
@@ -153,9 +165,14 @@ const BookingCard = ({
 
             <View>
               <StyleButton
-                onPress={() => navigation.navigate('DownloadReceipt')}
+                onPress={() =>
+                  navigation.navigate('DownloadReceipt', {
+                    data: item,
+                    isProductReceipt: false,
+                  })
+                }
                 btnWidth={responsiveWidth(35)}
-                btnHeight={responsiveHeight(5)}
+                btnHeight={responsiveHeight(5.5)}
                 justifyContent={'center'}
                 alignItems={'center'}
                 fontSize={2}
@@ -192,14 +209,69 @@ const BookingCard = ({
             />
 
             <LineBreak space={2} />
-
-            <View>
-              <StyleButton
-                onPress={() => navigation.navigate('DownloadReceipt')}
+            {showBtnSideBySide ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginTop: responsiveHeight(2),
+                }}
               >
-                View Receipt
-              </StyleButton>
-            </View>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('RateYourExperience', {
+                      productRating: false,
+                      productId: null,
+                      salonId: item?.salonId?._id,
+                    })
+                  }
+                  style={{
+                    backgroundColor: 'transparent',
+                    padding: responsiveHeight(1.6),
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderWidth: 1.5,
+                    borderColor: AppColors.themeColor,
+                    borderRadius: responsiveHeight(1.5),
+                    width: responsiveWidth(38),
+                  }}
+                >
+                  <AppText
+                    title="Give Rating"
+                    textColor={AppColors.WHITE}
+                    textSize={2}
+                    textFontWeight
+                  />
+                </TouchableOpacity>
+                <StyleButton
+                  onPress={() =>
+                    navigation.navigate('DownloadReceipt', {
+                      data: item,
+                      isProductReceipt: false,
+                    })
+                  }
+                  btnWidth={responsiveWidth(36)}
+                  btnHeight={responsiveHeight(6.2)}
+                  justifyContent={'center'}
+                  alignItems={'center'}
+                  fontSize={2}
+                  color={AppColors.BLACK}
+                  background={APPImages.view_receipt}
+                >
+                  View Receipt
+                </StyleButton>
+              </View>
+            ) : (
+              <View>
+                <StyleButton
+                  onPress={() =>
+                    navigation.navigate('DownloadReceipt', { data: item })
+                  }
+                >
+                  View Receipt
+                </StyleButton>
+              </View>
+            )}
           </View>
         )}
       </View>

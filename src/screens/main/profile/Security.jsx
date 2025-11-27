@@ -25,9 +25,14 @@ const data = [
 
 const Security = () => {
   const navigation = useNavigation();
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [switchStates, setSwitchStates] = useState({});
 
-  const toggleSwitch = () => setIsEnabled(previous => !previous);
+  const toggleSwitch = id => {
+    setSwitchStates(prev => ({
+      ...prev,
+      [id]: !prev[id], // toggle only the clicked one
+    }));
+  };
 
   return (
     <Background>
@@ -63,10 +68,10 @@ const Security = () => {
                   false: Color('serviceCheckbox'),
                   true: Color('serviceCheckbox'),
                 }}
-                thumbColor={isEnabled ? '#f4f3f4' : '#f4f3f4'}
+                thumbColor={'#f4f3f4'}
                 ios_backgroundColor="#3e3e3e"
-                onValueChange={toggleSwitch}
-                value={isEnabled}
+                onValueChange={() => toggleSwitch(item.id)}
+                value={!!switchStates[item.id]}
               />
             )}
           </View>

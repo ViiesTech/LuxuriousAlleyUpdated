@@ -12,6 +12,7 @@ type Colors = {
     GREEN: string;
     textColor: string;
     light_blue: string;
+    themeColor: string;
   };
   
 const AppColors: Colors = {
@@ -28,6 +29,7 @@ const AppColors: Colors = {
     APPBG: "#EFEFEF",
     GREEN: "#00a760",
     light_blue: "#262C55",
+    themeColor:'#CD8A1B',
   };
   
   export default AppColors;

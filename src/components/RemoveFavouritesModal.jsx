@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { View, Modal } from 'react-native';
+import { View, Modal, ActivityIndicator } from 'react-native';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -16,6 +16,8 @@ const RemoveFavouritesModal = ({
   visible,
   handleCancelButtonPress,
   handleAppointmentButtonPress,
+  removeSalonLoading = false,
+
 }) => {
   return (
     <Modal transparent={true} animationType="slide" visible={visible}>
@@ -78,7 +80,7 @@ const RemoveFavouritesModal = ({
             <LineBreak space={2} />
 
             <AppButton
-              title={`Yes, Remove Salon`}
+              title={removeSalonLoading ? (<ActivityIndicator size={'large'} color={AppColors.WHITE}/>) : `Yes, Remove Salon`}
               handlePress={handleCancelButtonPress}
               bgColor={Color('otpInputBackground')}
               textColor={AppColors.WHITE}

@@ -1,81 +1,277 @@
-import {View, Text, TouchableOpacity} from 'react-native';
-import React from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, { useState } from 'react';
+import Background from '../../utils/Background';
+import {
+  ActivityIndicator,
+  Dimensions,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { H3, Pera, Small } from '../../components/Text';
+import Br from '../../components/Br';
+import Input from '../../components/Input';
+import { Color } from '../../utils/Colors';
+import Button from '../../components/StyleButton';
 import AppText from '../../components/AppTextComps/AppText';
-import {responsiveFontSize, responsiveHeight} from '../../utils/Responsive_Dimensions';
-import BackgroundScreen from '../../components/AppTextComps/BackgroundScreen';
-import AppTextInput from '../../components/AppTextInput';
 import AppColors from '../../utils/AppColors';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Feather from 'react-native-vector-icons/Feather'
-import AppButton from '../../components/AppButton';
+import LineBreak from '../../components/LineBreak';
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from '../../utils/Responsive_Dimensions';
+import Feather from 'react-native-vector-icons/Feather';
 import SocialAuthButton from '../../components/SocialAuthButton';
-import AntDesign from 'react-native-vector-icons/AntDesign'
-const Signup = () => {
-  return (
-    <BackgroundScreen>
-        <View style={{height:responsiveHeight(10), justifyContent:'flex-end', marginBottom:20}}>
-      <AppText
-        textSize={2.5}
-        title={'Signup'}
-        textAlignment={'center'}
-        textFontWeight
-      />
-      </View>
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import { RegisterUser, ShowToast } from '../../GlobalFunctions';
 
-        <View style={{gap:20}}>
-        <AppTextInput
-          inputPlaceHolder={'Username'}
-          containerBg={AppColors.INPUTBG}
+const { width, height } = Dimensions.get('window');
+const SignUp = ({ navigation }) => {
+  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isChecked, setIsChecked] = useState(false);
+  const [screenType, setScreenType] = useState('signup_with_email');
+  const [isLoading, setIsLoading] = useState(false);
+  const signupHandler = async () => {
+    if (screenType === 'signup_with_phone') {
+      return ShowToast('error', 'Under Development');
+    }
+    if (!userName) {
+      return ShowToast('error', 'Username is Required');
+    } else if (!email) {
+      return ShowToast('error', 'Email is Required');
+    } else if (!password) {
+      return ShowToast('error', 'Password is Required');
+    } else if (!isChecked) {
+      return ShowToast(
+        'error',
+        'You Need To Accept Terms & Conditions To Proceed',
+      );
+    } else {
+      setIsLoading(true);
+      try {
+        await RegisterUser(userName, email, password, navigation);
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+      }
+    }
+  };
+  return (
+    <Background contentContainerStyle={{ flexGrow: 1 }}>
+      <View style={{ marginVertical: responsiveHeight(2) }}>
+        <LineBreak space={2} />
+        <AppText
+          title={'Sign Up'}
+          textColor={AppColors.WHITE}
+          textSize={3}
+          textFontWeight
+          textAlignment={'center'}
+        />
+        <LineBreak space={4} />
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: responsiveWidth(4),
+            justifyContent: 'space-between',
+          }}
+        >
+          <TouchableOpacity onPress={() => setScreenType('signup_with_email')}>
+            <AppText
+              title={'Signup with email'}
+              textColor={
+                screenType === 'signup_with_email'
+                  ? Color('gold')
+                  : AppColors.WHITE
+              }
+              textSize={2}
+              textAlignment={'center'}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setScreenType('signup_with_phone')}>
+            <AppText
+              title={'Signup with phone'}
+              textColor={
+                screenType === 'signup_with_phone'
+                  ? Color('gold')
+                  : AppColors.WHITE
+              }
+              textSize={2}
+              textAlignment={'center'}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <LineBreak space={3} />
+
+        <View>
+          <Input
+            value={userName}
+            color={Color('inputColor')}
+            icon={<Feather name="user" size={25} color={Color('gold')} />}
+            placeholder="input field"
+            placeholderColor={Color('inputPlaceholder')}
+            style={{ marginBottom: height * 0.02 }}
+            onChange={value => setUserName(value)}
+          />
+          <Input
+            value={email}
+            color={Color('inputColor')}
+            icon={<Fontisto name="email" size={25} color={Color('gold')} />}
+            placeholder={'input field'}
+            placeholderColor={Color('inputPlaceholder')}
+            style={{ marginBottom: height * 0.02 }}
+            onChange={val => setEmail(val)}
+            keyboardType="email-address"
+          />
+          {screenType === 'signup_with_email' && (
+            <Input
+              value={password}
+              color={Color('inputColor')}
+              icon={<Fontisto name="key" size={25} color={Color('gold')} />}
+              placeholder="input field"
+              placeholderColor={Color('inputPlaceholder')}
+              style={{ marginBottom: height * 0.02 }}
+              onChange={val => setPassword(val)}
+            />
+          )}
+          {/* <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <AppText
+                title="SignIn with phone"
+                textSize={1.7}
+                textColor={AppColors.WHITE}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate('SigninWithEmailAndPassword')}
+            >
+              <AppText
+                title="SignIn with email & password"
+                textSize={1.7}
+                textColor={AppColors.WHITE}
+              />
+            </TouchableOpacity>
+          </View> */}
+
+          <LineBreak space={screenType === 'signup_with_email' ? 2 : 11} />
+          <Button
+            style={{ width: width * 0.9, alignSelf: 'center' }}
+            // onPress={() =>
+            //   navigation.navigate('Main', { screen: 'SetLocation' })
+            // }
+            onPress={signupHandler}
+          >
+            {isLoading ? (
+              <ActivityIndicator size={'large'} color={AppColors.BLACK} />
+            ) : (
+              'Continue'
+            )}
+          </Button>
+        </View>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          gap: 15,
+          paddingHorizontal: responsiveWidth(8),
+        }}
+      >
+        <TouchableOpacity onPress={() => setIsChecked(!isChecked)}>
+          <Fontisto
+            name={isChecked ? 'checkbox-active' : 'checkbox-passive'}
+            size={25}
+            color={Color('textColor')}
+          />
+        </TouchableOpacity>
+        <Small style={{ lineHeight: 25 }}>
+          I agree to Fraime{' '}
+          <Small style={{ color: Color('gold_100') }}>Terms of Service</Small>{' '}
+          <Small>and</Small>{' '}
+          <Small style={{ color: Color('gold_100') }}>Privacy Policy</Small>
+        </Small>
+      </View>
+      <LineBreak space={11} />
+
+      <AppText
+        title="Or"
+        textAlignment={'center'}
+        textSize={2}
+        textColor={AppColors.WHITE}
+      />
+      <LineBreak space={2} />
+
+      <View
+        style={{
+          justifyContent: 'flex-end',
+          gap: 10,
+        }}
+      >
+        <SocialAuthButton
+          bgColor={AppColors.BLACK}
+          title={'Continue with Apple'}
           logo={
-            <Ionicons
-              name={'person-outline'}
-              color={AppColors.BTNCOLOURS}
-              size={responsiveFontSize(2.5)}
+            <AntDesign
+              name={'apple1'}
+              size={responsiveFontSize(2)}
+              color={AppColors.WHITE}
             />
           }
         />
-
-      <AppTextInput
-        inputPlaceHolder={'Email'}
-        containerBg={AppColors.INPUTBG}
-        logo={
-          <Feather
-            name={'mail'}
-            color={AppColors.BTNCOLOURS}
-            size={responsiveFontSize(2.5)}
+        <SocialAuthButton
+          txtColor={AppColors.BLACK}
+          bgColor={AppColors.LIGHTGRAY}
+          title={'Continue with Google'}
+          logo={
+            <AntDesign
+              name={'google'}
+              size={responsiveFontSize(2)}
+              color={AppColors.BLACK}
+            />
+          }
+        />
+      </View>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'flex-end',
+          paddingBottom: responsiveHeight(1),
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => navigation.navigate('SigninWithEmailAndPassword')}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: responsiveHeight(1),
+          }}
+        >
+          <AppText
+            title="Already have an account ?"
+            textColor={AppColors.WHITE}
+            textSize={2}
           />
-        }
-      />
-
-      <AppTextInput
-        inputPlaceHolder={'Password'}
-        containerBg={AppColors.INPUTBG}
-        logo={
-          <Feather
-            name={'key'}
-            color={AppColors.BTNCOLOURS}
-            size={responsiveFontSize(2.5)}
+          <AppText
+            title="Login"
+            textColor={AppColors.themeColor}
+            textSize={2}
           />
-        }
-      />
-
-      <AppButton />
-
-      <View style={{flexDirection:'row', gap:10, alignItems:'center' }}>
-            <TouchableOpacity style={{height:responsiveHeight(3), width:responsiveHeight(3), backgroundColor:AppColors.LIGHTGRAY, borderRadius:5}}>
-
-            </TouchableOpacity>
-            <AppText textSize={2} title='I agree to Nail Warz Terms of Service 
-                and Privacy Policy' textFontWeight={100}/>
+        </TouchableOpacity>
       </View>
-
-        <View style={{ height:responsiveHeight(30), justifyContent:'flex-end', gap:10}}>
-      <SocialAuthButton bgColor={AppColors.BLACK} title={"Continue with Apple"} logo={<AntDesign name={"apple1"} size={responsiveFontSize(2)} color={AppColors.WHITE}/>}/>
-      <SocialAuthButton txtColor={AppColors.BLACK} bgColor={AppColors.LIGHTGRAY} title={"Continue with Google"} logo={<AntDesign name={"google"} size={responsiveFontSize(2)} color={AppColors.BLACK}/>}/>
-      </View>
-      </View>
-    </BackgroundScreen>
-  );    
+    </Background>
+  );
 };
 
-export default Signup;
+export default SignUp;

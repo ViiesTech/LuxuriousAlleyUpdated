@@ -22,6 +22,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Background from '../../../utils/Background';
 import { Color } from '../../../utils/Colors';
 import StyleButton from '../../../components/StyleButton';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearToken } from '../../../redux/Slices';
+import { ImageBaseUrl } from '../../../assets/Utils/BaseUrl';
 
 const profileMenus = [
   {
@@ -161,11 +164,13 @@ const profileMenus = [
 const Profile = () => {
   const navigation = useNavigation();
   const [isEnabled, setIsEnabled] = useState(false);
-
+  const dispatch = useDispatch();
   const toggleSwitch = () => setIsEnabled(previous => !previous);
+  const { userData } = useSelector(state => state?.user);
+  console.log('userdata', `${ImageBaseUrl}${userData?.image}`);
 
   return (
-    <Background>
+    <Background contentContainerStyle={{ paddingBottom: responsiveHeight(2) }}>
       <AppHeader onPress={() => navigation.goBack()} title="Profile" />
 
       <View>
@@ -182,12 +187,17 @@ const Profile = () => {
             }}
           >
             <Image
-              source={APPImages.nailsTwo}
+              // source={APPImages.nailsTwo}
+              source={
+                userData?.image
+                  ? { uri: `${ImageBaseUrl}${userData?.image}` }
+                  : APPImages.userDummy
+              }
               style={{ width: 100, height: 100, borderRadius: 100 }}
             />
           </View>
           <AppText
-            title={'Charles James'}
+            title={userData?.username}
             textColor={AppColors.WHITE}
             textSize={2.5}
             textFontWeight
@@ -234,7 +244,9 @@ const Profile = () => {
                     : 0,
                 }}
                 onPress={() => {
-                  if (item.navTo) {
+                  if (item.id === 9) {
+                    dispatch(clearToken());
+                  } else if (item.navTo) {
                     navigation.navigate(item.navTo);
                   } else {
                     console.log('not working');

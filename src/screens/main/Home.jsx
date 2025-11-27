@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Image,
@@ -22,14 +22,25 @@ import APPImages from '../../assets/APPImages';
 import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
 import SaloonsCard from '../../components/SaloonsCard';
-import SaloonsArray from '../../utils/SaloonsArray';
 import { useNavigation } from '@react-navigation/native';
 import { Color } from '../../utils/Colors';
 import Background from '../../utils/Background';
 import LineBreak from '../../components/LineBreak';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {
+  ProductsLoader,
+  SalonLoader,
+  ServiceLoader,
+} from '../../components/Loaders';
 import ProductCard from '../../components/ProductCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { ShowToast } from '../../GlobalFunctions';
+import { ImageBaseUrl } from '../../assets/Utils/BaseUrl';
+import {
+  fetchCategories,
+  fetchNearbySalons,
+  fetchProducts,
+} from '../../redux/DataSlice';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const popularStylist = [
   {
@@ -74,14 +85,99 @@ const product = [
 
 const Home = () => {
   const [serviceSelected, setServiceSelect] = useState(0);
-  const Servies = [
-    { id: 1, name: 'Dip Powder Nails', icon: APPImages.COMB },
-    { id: 2, name: 'Gel Manicure/Pedicure', icon: APPImages.FACIAL },
-  ];
   const navigation = useNavigation();
+  const { location } = useSelector(state => state?.user?.userData);
+  const { userData } = useSelector(state => state?.user);
+  const dispatch = useDispatch();
+  console.log('userData', userData);
+  const { categories, salons, loading, nearbySalonsCache, allProducts } =
+    useSelector(state => state.data);
+  console.log('nearbySalonsCache', nearbySalonsCache);
+  console.log('allProducts', allProducts?.[serviceSelected]);
+  useEffect(() => {
+    if (categories.length === 0) {
+      dispatch(fetchCategories());
+    } else {
+      dispatch(fetchCategories({ silent: true }));
+    }
+  }, [dispatch]);
 
+  // ✅ Set default service when categories arrive
+  useEffect(() => {
+    if (categories?.length > 0 && !serviceSelected) {
+      setServiceSelect(categories[0]?._id);
+    }
+  }, [categories]);
+
+  useEffect(() => {
+    if (!serviceSelected || !location) return;
+
+    const { coordinates } = location;
+    // const lat = coordinates[0];
+    // const lng = coordinates[1];
+    const lat = 40.758;
+    const lng = -73.9855;
+
+    // Create cache key
+    const cacheKey = `${serviceSelected}_${lat.toFixed(3)}_${lng.toFixed(3)}`;
+    const cachedData = nearbySalonsCache[cacheKey];
+
+    if (!cachedData) {
+      //  No cache — show loader & call API
+      dispatch(fetchNearbySalons({ lat, lng, serviceId: serviceSelected }));
+    } else {
+      // ✅ Use cache instantly (no loader)
+      dispatch({
+        type: 'data/setSalons', // update current salons from cache
+        payload: cachedData,
+      });
+
+      //  Refresh in background silently
+      dispatch(
+        fetchNearbySalons({
+          lat,
+          lng,
+          serviceId: serviceSelected,
+          silent: true,
+        }),
+      );
+    }
+  }, [serviceSelected, location]);
+
+  // useEffect(() => {
+  //   if (!serviceSelected) return;
+
+  //   // Optional: skip if products already loaded for this category
+  //   if (allProducts.length > 0) {
+  //     dispatch(fetchProducts({ categoryId: serviceSelected, silent: true }));
+  //   } else {
+  //     dispatch(fetchProducts({ categoryId: serviceSelected }));
+  //   }
+  // }, [serviceSelected]);
+
+  useEffect(() => {
+    if (!serviceSelected) return;
+
+    const cachedProducts = allProducts?.[serviceSelected];
+
+    if (cachedProducts && cachedProducts.length > 0) {
+      // ✅ Use cache instantly, don't show loader
+      dispatch({
+        type: 'data/setProducts',
+        payload: { categoryId: serviceSelected, data: cachedProducts },
+      });
+
+      // 🔄 Optional: refresh silently only once (not every switch)
+      // You can comment this out if not needed
+      dispatch(fetchProducts({ categoryId: serviceSelected, silent: true }));
+    } else {
+      // ❌ No cache, so fetch once
+      dispatch(fetchProducts({ categoryId: serviceSelected }));
+    }
+  }, [serviceSelected]);
+  console.log('userdata', serviceSelected);
   return (
-    <Background>
+    <Background contentContainerStyle={{ paddingTop: responsiveHeight(2) }}>
       <View
         style={{
           flexDirection: 'row',
@@ -92,7 +188,8 @@ const Home = () => {
       >
         <TouchableOpacity
           style={{ flexDirection: 'row' }}
-          onPress={() => navigation.navigate('SearchLocation')}
+          // onPress={() => navigation.navigate('SearchLocation')}
+          onPress={() => ShowToast('info', 'Under Development')}
         >
           <EvilIcons
             name={'location'}
@@ -106,30 +203,55 @@ const Home = () => {
               textSize={2}
             />
             <AppText
-              title="Lakewood, California"
+              numberOfLines={1}
+              textwidth={50}
+              title={location?.locationName}
               textSize={2}
               textFontWeight
               textColor={AppColors.WHITE}
             />
           </View>
         </TouchableOpacity>
-
-        <TouchableOpacity
+        <View
           style={{
-            borderWidth: 1,
-            borderColor: AppColors.WHITE,
-            paddingHorizontal: responsiveWidth(2.5),
-            paddingVertical: responsiveHeight(1),
-            borderRadius: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: responsiveHeight(1.5),
           }}
-          onPress={() => navigation.navigate('Notification')}
         >
-          <Ionicons
-            name={'notifications-outline'}
-            size={responsiveFontSize(3)}
-            color={Color('gold')}
-          />
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              borderWidth: 1,
+              borderColor: AppColors.WHITE,
+              paddingHorizontal: responsiveWidth(1.8),
+              paddingVertical: responsiveHeight(1),
+              borderRadius: 10,
+            }}
+            onPress={() => navigation.navigate('ChatList')}
+          >
+            <Ionicons
+              name={'chatbubble-ellipses-outline'}
+              size={responsiveFontSize(3)}
+              color={Color('gold')}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              borderWidth: 1,
+              borderColor: AppColors.WHITE,
+              paddingHorizontal: responsiveWidth(1.8),
+              paddingVertical: responsiveHeight(1),
+              borderRadius: 10,
+            }}
+            onPress={() => navigation.navigate('Notification')}
+          >
+            <Ionicons
+              name={'notifications-outline'}
+              size={responsiveFontSize(3)}
+              color={Color('gold')}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={{ marginTop: 20 }}>
@@ -220,43 +342,50 @@ const Home = () => {
         />
 
         <LineBreak space={2} />
-
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <FlatList
-            data={Servies}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 10 }}
-            renderItem={({ item, index }) => {
-              const logic = serviceSelected == index;
-              return (
-                <TouchableOpacity
-                  onPress={() => setServiceSelect(index)}
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    padding: 10,
-                    backgroundColor: logic ? Color('gold') : Color('cardColor'),
-                    borderWidth: 1,
-                    borderColor: logic ? Color('gold') : AppColors.WHITE,
-                    borderRadius: 10,
-                    gap: 5,
-                  }}
-                >
-                  <Image
-                    source={item.icon}
-                    style={{ height: 20, width: 20, resizeMode: 'contain' }}
-                  />
-                  <AppText
-                    title={item.name}
-                    textSize={2}
-                    textColor={logic ? AppColors.WHITE : Color('gold')}
-                  />
-                </TouchableOpacity>
-              );
-            }}
-          />
-        </View>
+        {loading?.categories ? (
+          <View style={{}}>
+            <ServiceLoader />
+          </View>
+        ) : (
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <FlatList
+              data={categories}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ gap: 10 }}
+              renderItem={({ item, index }) => {
+                const logic = serviceSelected === item?._id;
+                return (
+                  <TouchableOpacity
+                    onPress={() => setServiceSelect(item?._id)}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      padding: 10,
+                      backgroundColor: logic
+                        ? Color('gold')
+                        : Color('cardColor'),
+                      borderWidth: 1,
+                      borderColor: logic ? Color('gold') : AppColors.WHITE,
+                      borderRadius: 10,
+                      gap: 5,
+                    }}
+                  >
+                    <Image
+                      source={APPImages.COMB}
+                      style={{ height: 20, width: 20, resizeMode: 'contain' }}
+                    />
+                    <AppText
+                      title={item?.categoryName}
+                      textSize={2}
+                      textColor={logic ? AppColors.WHITE : Color('gold')}
+                    />
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          </View>
+        )}
       </View>
 
       <View
@@ -280,7 +409,10 @@ const Home = () => {
             color={Color('gold')}
             size={responsiveFontSize(2)}
           />
-          <TouchableOpacity onPress={() => navigation.navigate('MapView')}>
+          {/* <TouchableOpacity onPress={() => navigation.navigate('MapView')}> */}
+          <TouchableOpacity
+            onPress={() => ShowToast('info', 'Under Development')}
+          >
             <AppText
               title="View on Map"
               textColor={Color('gold')}
@@ -291,27 +423,48 @@ const Home = () => {
       </View>
 
       <LineBreak space={2} />
-
-      <FlatList
-        data={SaloonsArray}
-        ItemSeparatorComponent={<LineBreak space={2} />}
-        renderItem={({ item }) => {
-          return (
-            <SaloonsCard
-              title={item.title}
-              KM={item.KM}
-              Rating={item.Rating}
-              TotalNoOfRating={item.TotalNoOfRating}
-              img={item.img}
-              location={item.location}
-            />
-          );
-        }}
-      />
+      {loading?.nearBy ? (
+        <SalonLoader />
+      ) : salons?.length < 1 ? (
+        <View style={{ marginTop: responsiveHeight(1) }}>
+          <AppText
+            textColor="#cd8a1b"
+            textSize={2.3}
+            textAlignment="center"
+            title="No salons found nearby."
+          />
+        </View>
+      ) : (
+        <FlatList
+          data={salons}
+          ItemSeparatorComponent={<LineBreak space={2} />}
+          renderItem={({ item }) => {
+            console.log('item', item);
+            return (
+              <SaloonsCard
+                title={item?.bName}
+                KM={
+                  item?.distanceInKm
+                    ? parseFloat(item.distanceInKm.replace(' km', '')).toFixed(
+                        1,
+                      )
+                    : '2'
+                }
+                // KM="2"
+                itemId={item?._id}
+                Rating={`{${Number(item?.avgRating)?.toFixed(2)})`}
+                TotalNoOfRating={item?.totalReviews}
+                img={`${ImageBaseUrl}${item.bImage}`}
+                location={item?.bLocationName}
+              />
+            );
+          }}
+        />
+      )}
 
       <LineBreak space={1} />
 
-      <View
+      {/* <View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -326,12 +479,12 @@ const Home = () => {
           textFontWeight
         />
 
-        <TouchableOpacity onPress={() => navigation.navigate('MapView')}>
+        <TouchableOpacity>
           <AppText title="See All" textColor={Color('gold')} textSize={2} />
         </TouchableOpacity>
-      </View>
+      </View> */}
 
-      <LineBreak space={2} />
+      {/* <LineBreak space={2} />
 
       <FlatList
         data={popularStylist}
@@ -370,9 +523,7 @@ const Home = () => {
             </View>
           </TouchableOpacity>
         )}
-      />
-
-      <LineBreak space={1} />
+      /> */}
 
       <View
         style={{
@@ -389,26 +540,54 @@ const Home = () => {
           textFontWeight
         />
 
-        <TouchableOpacity onPress={() => navigation.navigate('MapView')}>
+        <TouchableOpacity onPress={() => navigation.navigate('AllProducts')}>
           <AppText title="See All" textColor={Color('gold')} textSize={2} />
         </TouchableOpacity>
       </View>
 
       <LineBreak space={2} />
 
-      <FlatList
-        data={product}
-        horizontal
-        contentContainerStyle={{ gap: responsiveWidth(5) }}
-        showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <ProductCard
-            item={item}
-            onCardPress={() => navigation.navigate('ProductDetails')}
+      {loading?.allProducts ? (
+        <View style={{ width: '100%' }}>
+          <FlatList
+            horizontal
+            data={[1, 2]}
+            contentContainerStyle={{ gap: responsiveHeight(2) }}
+            renderItem={({ item, index }) => {
+              return <ProductsLoader />;
+            }}
           />
-        )}
-      />
+        </View>
+      ) : (
+        <FlatList
+          data={allProducts?.[serviceSelected]}
+          horizontal
+          contentContainerStyle={{ gap: responsiveWidth(5) }}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <ProductCard
+              item={item}
+              onCardPress={
+                () =>
+                  navigation.navigate('HomeDetails', {
+                    id: item?.salonId?._id,
+                    showProductTab: true,
+                  })
+                // navigation.navigate('ProductDetails', { data: item })
+              }
+              onCartPress={
+                () =>
+                  navigation.navigate('HomeDetails', {
+                    id: item?.salonId?._id,
+                    showProductTab: true,
+                  })
 
+                // navigation.navigate('ProductDetails', { data: item })
+              }
+            />
+          )}
+        />
+      )}
       <LineBreak space={3} />
     </Background>
   );

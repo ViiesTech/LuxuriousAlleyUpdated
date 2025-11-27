@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import {View, Text, Image, TouchableOpacity, Animated} from 'react-native';
-import React, {useEffect, useRef} from 'react';
+import { View, Text, Image, TouchableOpacity, Animated } from 'react-native';
+import React, { useEffect, useRef } from 'react';
 import {
   responsiveFontSize,
   responsiveHeight,
@@ -11,7 +11,7 @@ import AppColors from '../utils/AppColors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { Color } from '../utils/Colors';
 
 type props = {
@@ -26,7 +26,8 @@ type props = {
   setIsShowDeleteIcon?: any;
   itemId?: any;
   onPress?: any;
-  setShowRemoveModal?:any;
+  setShowRemoveModal?: any;
+  onRemovePress?: () => void;
 };
 
 const SaloonsCard = ({
@@ -41,16 +42,18 @@ const SaloonsCard = ({
   itemId,
   isShowDeleteIcon,
   setShowRemoveModal,
+  onRemovePress,
 }: props) => {
   const navigation = useNavigation();
   const translateX = useRef(new Animated.Value(0)).current;
   const isOpen = isShowDeleteIcon?.id === itemId;
+  console.log('itemId', itemId)
 
   const handlePress = () => {
     if (!isOpen) {
-      setIsShowDeleteIcon({id: itemId, shown: true});
+      setIsShowDeleteIcon({ id: itemId, shown: true });
     } else {
-      setIsShowDeleteIcon({id: 0, shown: false});
+      setIsShowDeleteIcon({ id: 0, shown: false });
     }
   };
 
@@ -63,16 +66,16 @@ const SaloonsCard = ({
   }, [isOpen]);
 
   return (
-    <Animated.View style={component ? {transform: [{translateX}]} : {}}>
+    <Animated.View style={component ? { transform: [{ translateX }] } : {}}>
       <TouchableOpacity
         onPress={() => {
           if (component) {
             handlePress();
           } else {
-            navigation.navigate('HomeDetails');
+            navigation.navigate('HomeDetails', { id: itemId,showProductTab: false, });
           }
         }}>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <View
             style={{
               padding: 10,
@@ -86,11 +89,11 @@ const SaloonsCard = ({
               backgroundColor: Color('cardColor'),
             }}>
             <Image
-              source={img}
+              source={{ uri: img }}
               style={{
                 height: responsiveHeight(10),
                 width: responsiveHeight(10),
-                resizeMode: 'contain',
+                // resizeMode: 'contain',
                 borderRadius: 10,
                 marginRight: 10,
               }}
@@ -101,35 +104,37 @@ const SaloonsCard = ({
                 justifyContent: 'space-between',
                 width: responsiveWidth(60),
               }}>
-              <View style={{gap: 5}}>
-                <View style={{flexDirection: 'row', width: responsiveWidth(56), justifyContent: 'space-between', alignItems: 'center'}}>
-                <AppText
-                  title={title}
-                  textColor={AppColors.WHITE}
-                  textSize={2.5}
-                  textFontWeight
+              <View style={{ gap: 5 }}>
+                <View style={{ flexDirection: 'row', width: responsiveWidth(56), justifyContent: 'space-between', alignItems: 'center' }}>
+                  <AppText
+                    title={title}
+                    textColor={AppColors.WHITE}
+                    textSize={2.5}
+                    textFontWeight
                   />
-                <AppText
-                  title={`${KM} km`}
-                  textColor={AppColors.WHITE}
-                  textSize={1.8}
+                  <AppText
+                    title={`${KM} km`}
+                    textColor={AppColors.WHITE}
+                    textSize={1.8}
                   />
-                  </View>
+                </View>
                 <View
-                  style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+                  style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                   <Ionicons
                     name={'location-outline'}
                     size={responsiveFontSize(2)}
                     color={AppColors.DARKGRAY}
                   />
                   <AppText
+                    numberOfLines={1}
+                    textwidth={50}
                     title={location}
                     textSize={2}
                     textColor={AppColors.WHITE}
                   />
                 </View>
                 <View
-                  style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+                  style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                   <Entypo
                     name={'star'}
                     size={responsiveFontSize(2.5)}
@@ -146,7 +151,7 @@ const SaloonsCard = ({
             </View>
           </View>
           <TouchableOpacity
-            onPress={() => setShowRemoveModal(true)}
+            onPress={onRemovePress}
             style={{
               backgroundColor: '#FA52521A',
               justifyContent: 'center',

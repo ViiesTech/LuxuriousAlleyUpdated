@@ -25,7 +25,7 @@ interface reviewProps {
 
 const ReviewCard = (props: reviewProps) => {
     return (
-        <TouchableOpacity style={[styles.reviewStyle, props?.style]}>
+        <TouchableOpacity disabled style={[styles.reviewStyle, props?.style]}>
             <View
                 style={{
                     flexDirection: 'row',
@@ -50,7 +50,7 @@ const ReviewCard = (props: reviewProps) => {
                     <Text style={styles.ratingText}>{props?.rating}</Text>
                 </View>
             </View>
-            <Text style={styles.desc}>{props?.desc}</Text>
+            <Text numberOfLines={2} style={styles.desc}>{props?.desc}</Text>
         </TouchableOpacity>
     );
 };
@@ -63,6 +63,8 @@ const styles = StyleSheet.create({
         borderColor: Color('gold'),
         borderRadius: 10,
         width: responsiveWidth(70),
+        height: responsiveHeight(15),
+        maxHeight: responsiveHeight(16),
         padding: responsiveHeight(1.5),
         backgroundColor: Color('cardColor'),
     },

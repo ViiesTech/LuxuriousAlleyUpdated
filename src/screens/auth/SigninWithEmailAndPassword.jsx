@@ -1,10 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import { View, Image, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Background from '../../utils/Background';
 import APPImages from '../../assets/APPImages';
 import {
   responsiveFontSize,
+  responsiveHeight,
   responsiveWidth,
 } from '../../utils/Responsive_Dimensions';
 import LineBreak from '../../components/LineBreak';
@@ -15,12 +16,28 @@ import StyleButton from '../../components/StyleButton';
 import { useNavigation } from '@react-navigation/native';
 import SocialAuthButton from '../../components/SocialAuthButton';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { LoginUser, ShowToast } from '../../GlobalFunctions';
+import { useDispatch, useSelector } from 'react-redux';
 
 const SigninWithEmailAndPassword = () => {
   const navigation = useNavigation();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+  const { isLoading } = useSelector(state => state.user);
+  console.log('email', email, 'password', password);
 
+  const loginHandler = async () => {
+    if (!email) {
+      return ShowToast('error', 'Email Is Required');
+    } else if (!password) {
+      return ShowToast('error', 'Password Is Required');
+    } else {
+      await LoginUser(email, password, dispatch);
+    }
+  };
   return (
-    <Background>
+    <Background contentContainerStyle={{ flexGrow: 1 }}>
       <LineBreak space={10} />
       <Image
         source={APPImages.app_logo}
@@ -46,14 +63,17 @@ const SigninWithEmailAndPassword = () => {
       <LineBreak space={2} />
 
       <AppTextInput
+        onChangeText={val => setEmail(val)}
         inputPlaceHolder={'Enter your email or phone number'}
         containerBg={AppColors.INPUTBG}
+        keyboardType="email-address"
         placeholderTextColor={AppColors.BLACK}
       />
 
       <LineBreak space={2} />
 
       <AppTextInput
+        onChangeText={val => setPassword(val)}
         inputPlaceHolder={'Enter your password'}
         containerBg={AppColors.INPUTBG}
         placeholderTextColor={AppColors.BLACK}
@@ -73,10 +93,12 @@ const SigninWithEmailAndPassword = () => {
       <LineBreak space={2} />
 
       <View>
-        <StyleButton
-          onPress={() => navigation.navigate('Main', { screen: 'SetLocation' })}
-        >
-          Login
+        <StyleButton onPress={loginHandler}>
+          {isLoading ? (
+            <ActivityIndicator size={'large'} color={AppColors.BLACK} />
+          ) : (
+            'Login'
+          )}
         </StyleButton>
       </View>
 
@@ -119,6 +141,34 @@ const SigninWithEmailAndPassword = () => {
             />
           }
         />
+      </View>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'flex-end',
+          paddingBottom: responsiveHeight(2),
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => navigation.navigate('SignUp')}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: responsiveHeight(1),
+          }}
+        >
+          <AppText
+            title="Dont have an account ?"
+            textColor={AppColors.WHITE}
+            textSize={2}
+          />
+          <AppText
+            title="Signup"
+            textColor={AppColors.themeColor}
+            textSize={2}
+          />
+        </TouchableOpacity>
       </View>
     </Background>
   );

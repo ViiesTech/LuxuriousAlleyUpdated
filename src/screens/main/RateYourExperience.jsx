@@ -1,6 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { FlatList, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Background from '../../utils/Background';
 import { useNavigation } from '@react-navigation/native';
 import AppHeader from '../../components/AppHeader';
@@ -15,6 +20,8 @@ import {
 import { Color } from '../../utils/Colors';
 import AppTextInput from '../../components/AppTextInput';
 import StyleButton from '../../components/StyleButton';
+import { addReview, ShowToast } from '../../GlobalFunctions';
+import { useSelector } from 'react-redux';
 
 const qualityData = [
   { id: 1, title: 'Great' },
@@ -22,11 +29,42 @@ const qualityData = [
   { id: 3, title: 'Bad' },
 ];
 
-const RateYourExperience = () => {
+const RateYourExperience = ({ route }) => {
   const navigation = useNavigation();
-  const [rating, setRating] = useState(0);
-  const [selectedQuality, setSelectedQuality] = useState(0);
+  const [rating, setRating] = useState(1);
+  const [selectedQuality, setSelectedQuality] = useState({
+    id: 1,
+    value: 'Great',
+  });
+  const { _id } = useSelector(state => state?.user?.userData);
+  const { productRating, productId, salonId } = route?.params;
+  const [comments, setComments] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  console.log('route?.params', route?.params);
 
+  const addReviewHandler = async () => {
+    setIsLoading(true);
+    try {
+      const response = await addReview(
+        productId,
+        salonId,
+        _id,
+        rating,
+        comments,
+        productRating ? false : true,
+      );
+      if (response?.success) {
+        ShowToast('success', response?.message);
+      } else {
+        ShowToast('error', response?.message);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      ShowToast('error', error?.response?.data?.message);
+    }
+  };
+  console.log('selectedQuality', selectedQuality);
   return (
     <Background>
       <AppHeader
@@ -44,7 +82,11 @@ const RateYourExperience = () => {
           textColor={AppColors.WHITE}
         />
         <LineBreak space={2} />
-        <StarRating rating={rating} onChange={setRating} />
+        <StarRating
+          rating={rating}
+          enableHalfStar={false}
+          onChange={setRating}
+        />
         <LineBreak space={2} />
         <AppText
           title="Quality"
@@ -62,23 +104,29 @@ const RateYourExperience = () => {
               style={{
                 borderWidth: 1,
                 borderColor:
-                  selectedQuality === index ? AppColors.WHITE : Color('gold'),
+                  selectedQuality.id === item.id
+                    ? AppColors.WHITE
+                    : Color('gold'),
                 backgroundColor:
-                  selectedQuality === index
+                  selectedQuality.id === item.id
                     ? Color('gold')
                     : Color('lightTheme'),
                 paddingHorizontal: responsiveWidth(8),
                 paddingVertical: responsiveHeight(1),
                 borderRadius: 10,
               }}
-              onPress={() => setSelectedQuality(index)}
+              onPress={() => {
+                setSelectedQuality({ id: item.id, value: item.title });
+              }}
             >
               <AppText
                 title={item.title}
                 textSize={2.2}
                 textAlignment={'center'}
                 textColor={
-                  selectedQuality === index ? AppColors.BLACK : AppColors.WHITE
+                  selectedQuality.id === item.id
+                    ? AppColors.BLACK
+                    : AppColors.WHITE
                 }
               />
             </TouchableOpacity>
@@ -96,15 +144,20 @@ const RateYourExperience = () => {
         inputPlaceHolder={'Write here'}
         borderWidth={1}
         containerBg={Color('lightTheme')}
+        onChangeText={txt => setComments(txt)}
         inputHeight={20}
         multiline={true}
         textAlignVertical="top"
         borderColor={Color('gold')}
       />
       <LineBreak space={2} />
-      <StyleButton
-        onPress={() => navigation.navigate('Home')}
-      >{`Submit`}</StyleButton>
+      <StyleButton onPress={addReviewHandler}>
+        {isLoading ? (
+          <ActivityIndicator size={'large'} color={AppColors.BLACK} />
+        ) : (
+          `Submit`
+        )}
+      </StyleButton>
     </Background>
   );
 };
