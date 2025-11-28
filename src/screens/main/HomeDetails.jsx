@@ -41,7 +41,7 @@ const menuData = [
 
 const HomeDetails = ({ route }) => {
   const navigation = useNavigation();
-  const { id,showProductTab } = route?.params;
+  const { id, showProductTab } = route?.params;
   console.log('route.params', route.params);
   console.log('id', id);
 
@@ -218,7 +218,7 @@ const HomeDetails = ({ route }) => {
                   />
                 </View>
                 <AppText
-                  title={`${Number(salonData?.salon?.avgRating)?.toFixed(2)} (${
+                  title={`${Number(salonData?.salon?.avgRating)?.toFixed(1)} (${
                     salonData?.salon?.totalReviews
                   })`}
                   textSize={1.6}
@@ -276,6 +276,18 @@ const HomeDetails = ({ route }) => {
               renderItem={({ item }) => (
                 <ProductCard
                   item={item}
+                  onCartPress={() =>
+                    navigation.navigate('ProductDetails', {
+                      data: {
+                        ...item,
+                        salonId: {
+                          _id: salonData.salon?._id,
+                          bName: salonData?.salon?.bName,
+                          bImage: salonData?.salon?.bImage,
+                        },
+                      },
+                    })
+                  }
                   onCardPress={() =>
                     navigation.navigate('ProductDetails', {
                       data: {
@@ -531,7 +543,7 @@ const HomeDetails = ({ route }) => {
                   color={Color('gold')}
                 />
                 <AppText
-                  title={`${Number(salonData?.salon?.avgRating)?.toFixed(2)} (${
+                  title={`${Number(salonData?.salon?.avgRating)?.toFixed(1)} (${
                     salonData?.salon?.totalReviews
                   })`}
                   textSize={2.2}

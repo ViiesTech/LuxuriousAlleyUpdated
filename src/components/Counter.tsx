@@ -10,30 +10,30 @@ import AppText from './AppTextComps/AppText';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../redux/CartSlice';
 
-const CounterRedux = ({ salonId, productId, productName, productImage, stock }) => {
+const CounterRedux = ({ salonId, productId, productName, productImage, stock, price }) => {
     const dispatch = useDispatch();
+    console.log('productId', productId)
+    console.log('productName', productName)
+    console.log('productImage', productImage)
     const { cart } = useSelector(state => state.cart);
 
-    // find the cart for the current salon
     const salonCart = cart.find(s => s.salonId === salonId);
-
-    // find the specific product in that salon’s cart
     const cartProduct = salonCart?.products?.find(p => p.productId === productId);
 
-    const quantity = cartProduct?.quantity || 0;
+    const quantity = cartProduct?.quantity > 0 ? cartProduct.quantity : 1;
 
     const handleIncrease = () => {
-        // prevent exceeding stock
         if (quantity < stock) {
             dispatch(
                 addToCart({
                     salonId,
                     product: {
                         productId,
+                        quantity: 1, // increment by 1
+                        stock,
+                        price,
                         productName,
                         productImage,
-                        quantity: 1,
-                        stock, // important so redux knows max limit
                     },
                 }),
             );
@@ -41,15 +41,13 @@ const CounterRedux = ({ salonId, productId, productName, productImage, stock }) 
     };
 
     const handleDecrease = () => {
-        if (quantity > 0) {
+        if (cartProduct) {
             dispatch(
                 addToCart({
                     salonId,
                     product: {
                         productId,
-                        productName,
-                        productImage,
-                        quantity: -1,
+                        quantity: -1, // decrement by 1
                         stock,
                     },
                 }),

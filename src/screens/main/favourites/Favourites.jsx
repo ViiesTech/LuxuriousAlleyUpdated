@@ -131,7 +131,7 @@ const Favourites = () => {
                 // }
                 KM={'2'}
                 
-                Rating={`{${Number(item?.avgRating)?.toFixed(2)})`}
+                Rating={`{${Number(item?.avgRating)?.toFixed(1)})`}
                 TotalNoOfRating={item?.totalReviews}
                 img={`${ImageBaseUrl}${item.bImage}`}
                 location={item?.bLocationName}

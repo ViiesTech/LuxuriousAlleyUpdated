@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Background from '../../utils/Background';
 import AppHeader from '../../components/AppHeader';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import {
   responsiveFontSize,
   responsiveHeight,
@@ -26,7 +26,7 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import ReviewCard from '../../components/ReviewCard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import StyleButton from '../../components/StyleButton';
-import { Counter } from '../../components/Counter';
+import { Counter, CounterRedux } from '../../components/Counter';
 import { ImageBaseUrl } from '../../assets/Utils/BaseUrl';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../redux/CartSlice';
@@ -66,10 +66,18 @@ const ProductDetails = ({ route }) => {
   console.log('salonId', salonId, 'bImage', bImage);
   const categoryId = route?.params?.data?.categoryId;
   console.log('productid', _id);
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
   const [count2, setCount2] = useState(0);
   const dispatch = useDispatch();
   const { cart } = useSelector(state => state.cart);
+  const isFocused = useIsFocused();
+  const existingSalon = cart.find(s => s.salonId === salonId);
+  const existingProduct = existingSalon?.products?.find(
+    p => p.productId === _id,
+  );
+
+  const quantity = existingProduct?.quantity ?? 1;
+
   console.log('avgRating.toFixed(0)', avgRating.toFixed(0));
 
   const [reviewsLoading, setReviewsLoading] = useState(false);
@@ -120,24 +128,48 @@ const ProductDetails = ({ route }) => {
     fetchProductReviewsHandler();
   }, []);
 
+  // const handleAddToCart = () => {
+  //   if (count <= 0)
+  //     return ShowToast('error', 'Please Specify Quantity Of Your Product');
+
+  //   dispatch(
+  //     addToCart({
+  //       salonId,
+  //       product: {
+  //         productId: _id,
+  //         productName,
+  //         productImage: `${ImageBaseUrl}${images?.[0]}`,
+  //         price,
+  //         stock,
+  //         quantity: count, // use selected count
+  //       },
+  //     }),
+  //   );
+  //   navigation.navigate('Cart');
+  // };
+  useEffect(() => {
+    if (!existingProduct) {
+      dispatch(
+        addToCart({
+          salonId,
+          product: {
+            productId: _id,
+            productName,
+            productImage: `${ImageBaseUrl}${images?.[0]}`,
+            price,
+            stock,
+            quantity: 1, // only for initialization
+          },
+        }),
+      );
+    }
+  }, [isFocused]);
+
   const handleAddToCart = () => {
-    if (count <= 0)
+    if (!quantity || quantity <= 0)
       return ShowToast('error', 'Please Specify Quantity Of Your Product');
 
-    dispatch(
-      addToCart({
-        salonId,
-        product: {
-          productId: _id,
-          productName,
-          productImage: `${ImageBaseUrl}${images?.[0]}`,
-          price,
-          stock,
-          quantity: count, // use selected count
-        },
-      }),
-    );
-    navigation.navigate('Cart');
+    navigation.navigate('Cart'); // Redux already has the correct quantity
   };
 
   return (
@@ -191,8 +223,14 @@ const ProductDetails = ({ route }) => {
               textColor={AppColors.DARKGRAY}
             />
           </View>
-
-          <Counter stock={stock} count={count} setCount={setCount} />
+          <CounterRedux
+            productName={productName}
+            productImage={`${ImageBaseUrl}${images?.[0]}`}
+            salonId={salonId}
+            productId={_id}
+            stock={stock}
+            price={price}
+          />{' '}
         </View>
         <LineBreak space={2} />
         <View

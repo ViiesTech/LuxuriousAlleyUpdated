@@ -123,7 +123,7 @@ const AllReviews = ({ route }) => {
             color={Color('gold')}
           />
           <AppText
-            title={`${Number(reviewDetails?.avgRating)?.toFixed(2)}  (${
+            title={`${Number(reviewDetails?.avgRating)?.toFixed(1)}  (${
               reviewDetails?.totalRatings
             })`}
             textSize={2.2}

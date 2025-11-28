@@ -55,6 +55,7 @@ const RateYourExperience = ({ route }) => {
       );
       if (response?.success) {
         ShowToast('success', response?.message);
+        navigation.navigate('Home');
       } else {
         ShowToast('error', response?.message);
       }
@@ -87,7 +88,7 @@ const RateYourExperience = ({ route }) => {
           enableHalfStar={false}
           onChange={setRating}
         />
-        <LineBreak space={2} />
+        {/* <LineBreak space={2} />
         <AppText
           title="Quality"
           textSize={2.2}
@@ -131,7 +132,7 @@ const RateYourExperience = ({ route }) => {
               />
             </TouchableOpacity>
           )}
-        />
+        /> */}
       </View>
       <LineBreak space={2} />
       <AppText

@@ -23,7 +23,7 @@ const Cart = () => {
   const products = currentSalonCart ? currentSalonCart.products : [];
   const salonId = currentSalonCart ? currentSalonCart.salonId : null;
 
-  console.log('Products:', products);
+  console.log('Products:ss', products);
   console.log('SalonId:', salonId);
   console.log('GrandTotal:', grandTotal);
 
